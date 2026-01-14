@@ -1,0 +1,5 @@
+{
+  "name": "Pharmacy Pro Admin",
+  "description": "Functional Android implementation with Room, ViewModels, and Multi-language support.",
+  "requestFramePermissions": []
+}
