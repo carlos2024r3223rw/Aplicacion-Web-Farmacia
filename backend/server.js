@@ -170,3 +170,34 @@ const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor Backend corriendo en http://localhost:${PORT}`);
 });
+// ... (Todo el código anterior sigue igual) ...
+
+// --- ESTADÍSTICAS DASHBOARD (NUEVO) ---
+app.get('/stats/weekly', (req, res) => {
+    // Esta consulta suma el total de ventas agrupadas por fecha (últimos 7 días)
+    const sql = `
+        SELECT DATE(date) as sale_date, SUM(total) as total 
+        FROM orders 
+        WHERE date >= DATE(NOW()) - INTERVAL 7 DAY
+        GROUP BY DATE(date) 
+        ORDER BY sale_date ASC
+    `;
+    
+    db.query(sql, (err, result) => {
+        if (err) return res.status(500).json(err);
+        
+        // Convertimos fechas de SQL a nombres de días (Lun, Mar...)
+        const daysMap = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+        const formattedData = result.map(row => {
+            const d = new Date(row.sale_date);
+            return {
+                day: daysMap[d.getUTCDay()], // Obtiene el día de la semana
+                v: row.total
+            };
+        });
+        
+        res.json(formattedData);
+    });
+});
+
+// app.listen ...
