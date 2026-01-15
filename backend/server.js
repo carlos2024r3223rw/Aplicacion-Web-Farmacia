@@ -5,34 +5,32 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 
-// --- 1. CONEXIÓN A BASE DE DATOS (XAMPP) ---
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root',      // Usuario por defecto de XAMPP
-    password: '',      // Contraseña por defecto (vacía)
+    user: 'root',
+    password: '',
     database: 'pharmapro_db'
 });
 
 db.connect(err => {
-    if (err) {
-        console.error('❌ Error conectando a MySQL:', err);
-        return;
-    }
-    console.log('✅ Conectado a MySQL (XAMPP)');
+    if (err) console.error('❌ Error MySQL:', err);
+    else console.log('✅ Conectado a MySQL (XAMPP)');
 });
 
-// Ruta de prueba para saber si el servidor vive
-app.get('/', (req, res) => {
-    res.send('🤖 Servidor Backend PharmaPro: ONLINE');
-});
-
-// ==========================================
-//                 RUTAS
-// ==========================================
+// --- HELPER PARA NORMALIZAR USUARIOS ---
+// Esto arregla el problema de NAME vs name
+const normalizeUser = (user) => {
+    return {
+        id: user.id || user.ID,
+        name: user.name || user.NAME,
+        username: user.username || user.USERNAME,
+        role: user.role || user.ROLE,
+        password: user.password || user.PASSWORD
+    };
+};
 
 // --- LOGIN ---
 app.post('/login', (req, res) => {
@@ -41,25 +39,68 @@ app.post('/login', (req, res) => {
     db.query(sql, [user, pass], (err, result) => {
         if (err) return res.status(500).json(err);
         if (result.length > 0) {
-            res.json({ success: true, user: result[0] });
-        } else {
-            res.status(401).json({ success: false, message: "Credenciales incorrectas" });
+            // Normalizamos el usuario antes de enviarlo
+            const safeUser = normalizeUser(result[0]);
+            res.json({ success: true, user: safeUser });
         }
+        else res.status(401).json({ success: false, message: "Error" });
     });
 });
 
-// --- INVENTARIO (CRUD) ---
+// --- USUARIOS (GET) ---
+app.get('/users', (req, res) => {
+    db.query("SELECT * FROM users", (err, result) => {
+        if (err) return res.status(500).json(err);
+        // Normalizamos toda la lista
+        const safeUsers = result.map(u => normalizeUser(u));
+        res.json(safeUsers);
+    });
+});
 
-// Obtener todos
+// --- USUARIOS (POST - CREAR) ---
+app.post('/users', (req, res) => {
+    const { name, role, username, password } = req.body;
+    // Usamos nombres de columnas genéricos que suelen funcionar
+    const sql = "INSERT INTO users (NAME, ROLE, username, PASSWORD) VALUES (?, ?, ?, ?)";
+    db.query(sql, [name, role, username, password], (err, result) => {
+        if (err) return res.status(500).json(err);
+        res.json({ success: true });
+    });
+});
+
+// --- USUARIOS (PUT - EDITAR / CAMBIAR PASS) ---
+app.put('/users/:id', (req, res) => {
+    const { name, role, username, password } = req.body;
+    
+    if (password) {
+        // Si hay contraseña, actualizamos todo (incluido el pass)
+        const sql = "UPDATE users SET NAME=?, ROLE=?, username=?, PASSWORD=? WHERE id=?";
+        db.query(sql, [name, role, username, password, req.params.id], (err, result) => { 
+            if (err) return res.status(500).json(err); 
+            res.json({ success: true }); 
+        });
+    } else {
+        // Si NO hay contraseña, actualizamos solo datos
+        const sql = "UPDATE users SET NAME=?, ROLE=?, username=? WHERE id=?";
+        db.query(sql, [name, role, username, req.params.id], (err, result) => { 
+            if (err) return res.status(500).json(err); 
+            res.json({ success: true }); 
+        });
+    }
+});
+
+app.delete('/users/:id', (req, res) => {
+    db.query("DELETE FROM users WHERE id = ?", [req.params.id], (err, result) => { if (err) return res.status(500).json(err); res.json({ success: true }); });
+});
+
+// --- INVENTARIO ---
 app.get('/inventory', (req, res) => {
-    const sql = "SELECT * FROM inventory ORDER BY name ASC";
-    db.query(sql, (err, result) => {
+    db.query("SELECT * FROM inventory ORDER BY name ASC", (err, result) => {
         if (err) return res.status(500).json(err);
         res.json(result);
     });
 });
 
-// Crear nuevo
 app.post('/inventory', (req, res) => {
     const { name, category, stock, price, expiryDate } = req.body;
     const sql = "INSERT INTO inventory (name, category, stock, price, expiryDate) VALUES (?, ?, ?, ?, ?)";
@@ -69,7 +110,6 @@ app.post('/inventory', (req, res) => {
     });
 });
 
-// EDITAR (Stock, Precio, Nombre...)
 app.put('/inventory/:id', (req, res) => {
     const { name, category, stock, price, expiryDate } = req.body;
     const sql = "UPDATE inventory SET name=?, category=?, stock=?, price=?, expiryDate=? WHERE id=?";
@@ -79,125 +119,50 @@ app.put('/inventory/:id', (req, res) => {
     });
 });
 
-// Borrar
 app.delete('/inventory/:id', (req, res) => {
-    const sql = "DELETE FROM inventory WHERE id = ?";
-    db.query(sql, [req.params.id], (err, result) => {
+    db.query("DELETE FROM inventory WHERE id = ?", [req.params.id], (err, result) => {
         if (err) return res.status(500).json(err);
         res.json({ success: true });
     });
 });
 
-// --- USUARIOS / PERSONAL (CRUD) ---
-
-// Obtener todos
-app.get('/users', (req, res) => {
-    const sql = "SELECT * FROM users";
-    db.query(sql, (err, result) => {
+// --- VENTAS (POS) ---
+app.post('/sale', (req, res) => {
+    const { patient, items, total } = req.body;
+    db.beginTransaction(err => {
         if (err) return res.status(500).json(err);
-        res.json(result);
+        const sqlOrder = "INSERT INTO orders (patient, items, total, date, status) VALUES (?, ?, ?, NOW(), 'Completed')";
+        db.query(sqlOrder, [patient, JSON.stringify(items), total], (err, result) => {
+            if (err) return db.rollback(() => res.status(500).json(err));
+            const updatePromises = items.map(item => {
+                return new Promise((resolve, reject) => {
+                    const sqlUpdate = "UPDATE inventory SET stock = stock - ? WHERE id = ?";
+                    db.query(sqlUpdate, [item.qty, item.id], (err, result) => { if (err) reject(err); else resolve(result); });
+                });
+            });
+            Promise.all(updatePromises)
+                .then(() => { db.commit(err => { if (err) return db.rollback(() => res.status(500).json(err)); res.json({ success: true }); }); })
+                .catch(err => { db.rollback(() => res.status(500).json({ error: "Stock error", details: err })); });
+        });
     });
 });
 
-// Crear nuevo
-app.post('/users', (req, res) => {
-    const { name, role, username, password } = req.body;
-    const sql = "INSERT INTO users (name, role, username, password) VALUES (?, ?, ?, ?)";
-    db.query(sql, [name, role, username, password], (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ id: result.insertId, ...req.body });
-    });
-});
-
-// EDITAR (Cambiar contraseña, rol, nombre)
-app.put('/users/:id', (req, res) => {
-    const { name, role, username, password } = req.body;
-    
-    // Lógica: Si la contraseña viene vacía, no la cambiamos.
-    let sql, params;
-    if (password && password.trim() !== "") {
-        sql = "UPDATE users SET name=?, role=?, username=?, password=? WHERE id=?";
-        params = [name, role, username, password, req.params.id];
-    } else {
-        sql = "UPDATE users SET name=?, role=?, username=? WHERE id=?";
-        params = [name, role, username, req.params.id];
-    }
-
-    db.query(sql, params, (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ success: true });
-    });
-});
-
-// Borrar
-app.delete('/users/:id', (req, res) => {
-    const sql = "DELETE FROM users WHERE id = ?";
-    db.query(sql, [req.params.id], (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ success: true });
-    });
-});
-
-// --- PEDIDOS (ORDERS) ---
-
-// Obtener todos (y parsear el JSON de los items)
 app.get('/orders', (req, res) => {
-    const sql = "SELECT * FROM orders ORDER BY date DESC";
-    db.query(sql, (err, result) => {
+    db.query("SELECT * FROM orders ORDER BY date DESC", (err, result) => {
         if (err) return res.status(500).json(err);
-        
-        // Convertimos el string JSON de la DB a objeto JS real para que React lo entienda
-        const parsedOrders = result.map(order => ({
-            ...order,
-            items: order.items ? JSON.parse(order.items) : []
-        }));
-        
+        const parsedOrders = result.map(o => ({ ...o, items: o.items ? JSON.parse(o.items) : [] }));
         res.json(parsedOrders);
     });
 });
 
-// Completar/Borrar pedido
-app.delete('/orders/:id', (req, res) => {
-    const sql = "DELETE FROM orders WHERE id = ?";
-    db.query(sql, [req.params.id], (err, result) => {
-        if (err) return res.status(500).json(err);
-        res.json({ success: true });
-    });
-});
-
-// --- INICIAR SERVIDOR ---
-const PORT = 3001;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor Backend corriendo en http://localhost:${PORT}`);
-});
-// ... (Todo el código anterior sigue igual) ...
-
-// --- ESTADÍSTICAS DASHBOARD (NUEVO) ---
 app.get('/stats/weekly', (req, res) => {
-    // Esta consulta suma el total de ventas agrupadas por fecha (últimos 7 días)
-    const sql = `
-        SELECT DATE(date) as sale_date, SUM(total) as total 
-        FROM orders 
-        WHERE date >= DATE(NOW()) - INTERVAL 7 DAY
-        GROUP BY DATE(date) 
-        ORDER BY sale_date ASC
-    `;
-    
+    const sql = `SELECT DATE(date) as sale_date, SUM(total) as total FROM orders WHERE date >= DATE(NOW()) - INTERVAL 7 DAY GROUP BY DATE(date) ORDER BY sale_date ASC`;
     db.query(sql, (err, result) => {
         if (err) return res.status(500).json(err);
-        
-        // Convertimos fechas de SQL a nombres de días (Lun, Mar...)
         const daysMap = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
-        const formattedData = result.map(row => {
-            const d = new Date(row.sale_date);
-            return {
-                day: daysMap[d.getUTCDay()], // Obtiene el día de la semana
-                v: row.total
-            };
-        });
-        
-        res.json(formattedData);
+        const formatted = result.map(r => ({ day: daysMap[new Date(r.sale_date).getUTCDay()], v: r.total }));
+        res.json(formatted);
     });
 });
 
-// app.listen ...
+app.listen(3001, () => console.log(' Backend CORREGIDO listo en puerto 3001'));
