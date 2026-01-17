@@ -21,10 +21,10 @@ const db = mysql.createPool({
 (async () => {
     try {
         const connection = await db.getConnection();
-        console.log('✅ Conectado a MySQL - Sistema V17.4 (Async/Await)');
+        console.log(' Conectado a MySQL');
         connection.release();
     } catch (err) {
-        console.error('❌ Error conectando a MySQL:', err.message);
+        console.error(' Error conectando a MySQL:', err.message);
     }
 })();
 
@@ -159,7 +159,7 @@ app.post('/sale', async (req, res) => {
         const [cashRows] = await connection.query("SELECT * FROM cash_cuts WHERE user_id = ? AND status = 'open'", [actingUser.id]);
         if (cashRows.length === 0) {
             connection.release();
-            return res.status(400).json({ error: "⛔ CAJA CERRADA" });
+            return res.status(400).json({ error: " CAJA CERRADA" });
         }
 
         await connection.beginTransaction();
@@ -252,4 +252,4 @@ app.get('/stats/weekly', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`🚀 Servidor Async LISTO en puerto ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor Async LISTO en puerto ${PORT}`));
