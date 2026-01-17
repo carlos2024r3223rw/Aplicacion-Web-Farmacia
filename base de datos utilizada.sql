@@ -29,110 +29,13 @@ CREATE TABLE `audit_logs` (
   `details` text DEFAULT NULL,
   `date` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `audit_logs` */
 
 insert  into `audit_logs`(`id`,`user_id`,`user_name`,`action`,`entity`,`details`,`date`) values 
-(1,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:04:31'),
-(2,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:06:31'),
-(3,1,'Administrador','UPDATE_PRODUCT','Ranitidina 150mg','Actualizado','2026-01-15 22:08:00'),
-(4,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:08:54'),
-(5,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:09:27'),
-(6,4,'Josue Marroquín','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:09:51'),
-(7,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:10:02'),
-(8,3,'Maria Garcia','UPDATE_PRODUCT','Acetaminofen 500mg','Actualizado','2026-01-15 22:10:18'),
-(9,3,'Maria Garcia','REQUEST_STOCK','Acetaminofen 500mg','Sucursal: Sede Central','2026-01-15 22:10:54'),
-(10,4,'Josue Marroquín','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:11:03'),
-(11,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:11:12'),
-(12,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:18:39'),
-(13,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:19:18'),
-(14,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:21:16'),
-(15,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:21:23'),
-(16,3,'Maria Garcia','UPDATE_PRODUCT','Acetaminofen 500mg','Actualizado','2026-01-15 22:21:37'),
-(17,1,'Administrador','UPDATE_PRODUCT','Complejo B Iny.','Actualizado','2026-01-15 22:23:05'),
-(18,1,'Administrador','UPDATE_PRODUCT','Salbutamol Inhalador','Actualizado','2026-01-15 22:23:15'),
-(19,1,'Administrador','UPDATE_PRODUCT','Metoclopramida','Actualizado','2026-01-15 22:23:21'),
-(20,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:24:33'),
-(21,1,'Administrador','UPDATE_PRODUCT','Ibuprofeno 400mg','Actualizado','2026-01-15 22:24:56'),
-(22,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:28:15'),
-(23,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:28:25'),
-(24,1,'Administrador','DISPATCH_STOCK','Pedido #2','Enviado a sucursal','2026-01-15 22:28:45'),
-(25,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:29:40'),
-(26,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +10','2026-01-15 22:35:58'),
-(27,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:36:38'),
-(28,1,'Administrador','DISPATCH_STOCK','Pedido #1','Enviado a sucursal','2026-01-15 22:36:45'),
-(29,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:36:59'),
-(30,3,'Maria Garcia','RECEIVE_STOCK','Complejo B Iny.','Recibidos +10','2026-01-15 22:37:10'),
-(31,3,'Maria Garcia','UPDATE_PRODUCT','Alcohol Etílico 70%','Actualizado','2026-01-15 22:38:01'),
-(32,3,'Maria Garcia','REQUEST_STOCK','Alcohol Etílico 70%','Sucursal: Sede Central','2026-01-15 22:38:06'),
-(33,1,'Administrador','LOGIN','Sistema','Inicio de sesión exitoso','2026-01-15 22:38:23'),
-(34,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 22:49:29'),
-(35,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 22:49:29'),
-(36,1,'Administrador','DISPATCH_STOCK','Pedido #3','Enviados: 25','2026-01-15 22:49:44'),
-(37,3,'Maria Garcia','RECEIVE_STOCK','Alcohol Etílico 70%','Recibidos +25','2026-01-15 22:49:50'),
-(38,3,'Maria Garcia','REQUEST_STOCK','Amlodipino 5mg','Pide: 10','2026-01-15 22:50:04'),
-(39,1,'Administrador','DISPATCH_STOCK','Pedido #4','Enviados: 26','2026-01-15 22:50:23'),
-(40,3,'Maria Garcia','RECEIVE_STOCK','Amlodipino 5mg','Recibidos +26','2026-01-15 22:50:29'),
-(41,3,'Maria Garcia','REQUEST_STOCK','Amoxicilina/Clavulánico','Pide: 10','2026-01-15 22:51:46'),
-(42,3,'Maria Garcia','REQUEST_STOCK','Aspirina Bayer','Pide: 10','2026-01-15 22:51:48'),
-(43,3,'Maria Garcia','REQUEST_STOCK','Atorvastatina 20mg','Pide: 10','2026-01-15 22:51:49'),
-(44,3,'Maria Garcia','REQUEST_STOCK','Azitromicina 500mg','Pide: 10','2026-01-15 22:51:51'),
-(45,3,'Maria Garcia','REQUEST_STOCK','Azitromicina 500mg','Pide: 10','2026-01-15 22:52:03'),
-(46,1,'Administrador','DISPATCH_STOCK','Pedido #9','Enviados: 10','2026-01-15 22:52:36'),
-(47,1,'Administrador','DISPATCH_STOCK','Pedido #8','Enviados: 10','2026-01-15 22:52:46'),
-(48,3,'Maria Garcia','RECEIVE_STOCK','Azitromicina 500mg','Recibidos +10','2026-01-15 22:52:48'),
-(49,3,'Maria Garcia','RECEIVE_STOCK','Azitromicina 500mg','Recibidos +10','2026-01-15 22:52:49'),
-(50,1,'Administrador','DISPATCH_STOCK','Pedido #7','Enviados: 10','2026-01-15 22:52:53'),
-(51,3,'Maria Garcia','RECEIVE_STOCK','Atorvastatina 20mg','Recibidos +10','2026-01-15 22:52:54'),
-(52,1,'Administrador','DISPATCH_STOCK','Pedido #6','Enviados: 30','2026-01-15 22:53:01'),
-(53,3,'Maria Garcia','RECEIVE_STOCK','Aspirina Bayer','Recibidos +30','2026-01-15 22:53:03'),
-(54,3,'Maria Garcia','REQUEST_STOCK','Acetaminofen 500mg','Pide: 10','2026-01-15 22:53:14'),
-(55,1,'Administrador','DISPATCH_STOCK','Pedido #10','Enviados: 55','2026-01-15 22:53:21'),
-(56,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +55','2026-01-15 22:53:25'),
-(57,1,'Administrador','DISPATCH_STOCK','Pedido #5','Enviados: 40','2026-01-15 22:53:42'),
-(58,3,'Maria Garcia','RECEIVE_STOCK','Amoxicilina/Clavulánico','Recibidos +40','2026-01-15 22:53:47'),
-(59,3,'Maria Garcia','REQUEST_STOCK','Amlodipino 5mg','Pide: 10','2026-01-15 22:54:04'),
-(60,1,'Administrador','DISPATCH_STOCK','Pedido #11','Enviados: 20','2026-01-15 23:00:43'),
-(61,3,'Maria Garcia','RECEIVE_STOCK','Amlodipino 5mg','Recibidos +20','2026-01-15 23:00:46'),
-(62,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:05:40'),
-(63,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:05:55'),
-(64,3,'Maria Garcia','REQUEST_STOCK','Acetaminofen 500mg','Pide: 10','2026-01-15 23:06:19'),
-(65,1,'Administrador','DISPATCH_STOCK','Pedido #12','Enviados: 40','2026-01-15 23:06:24'),
-(66,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +40','2026-01-15 23:06:27'),
-(67,3,'Maria Garcia','REQUEST_STOCK','Glibenclamida 5mg','Pide: 10','2026-01-15 23:06:35'),
-(68,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:07:35'),
-(69,3,'Maria Garcia','REQUEST_STOCK','Glibenclamida 5mg','Pide: 10','2026-01-15 23:07:56'),
-(70,1,'Administrador','DISPATCH_STOCK','Pedido #14','Enviados: 10','2026-01-15 23:07:59'),
-(71,3,'Maria Garcia','RECEIVE_STOCK','Glibenclamida 5mg','Recibidos +10','2026-01-15 23:08:02'),
-(72,1,'Administrador','DISPATCH_STOCK','Pedido #13','Enviados: 30','2026-01-15 23:08:10'),
-(73,3,'Maria Garcia','RECEIVE_STOCK','Glibenclamida 5mg','Recibidos +30','2026-01-15 23:08:12'),
-(74,3,'Maria Garcia','REQUEST_STOCK','Acetaminofen 500mg','Pide: 10','2026-01-15 23:08:19'),
-(75,1,'Administrador','DISPATCH_STOCK','Pedido #15','Enviados: 10','2026-01-15 23:08:22'),
-(76,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +10','2026-01-15 23:08:26'),
-(77,3,'Maria Garcia','REQUEST_STOCK','Gentamicina Iny.','Pide: 10','2026-01-15 23:08:31'),
-(78,1,'Administrador','DISPATCH_STOCK','Pedido #16','Enviados: 10','2026-01-15 23:08:36'),
-(79,3,'Maria Garcia','RECEIVE_STOCK','Gentamicina Iny.','Recibidos +10','2026-01-15 23:08:40'),
-(80,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:18:30'),
-(81,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:18:44'),
-(82,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:19:14'),
-(83,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:24:00'),
-(84,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:24:24'),
-(85,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:24:38'),
-(86,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:26:35'),
-(87,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-15 23:26:45'),
-(88,3,'Maria Garcia','REQUEST_STOCK','Acetaminofen 500mg','Pide: 10','2026-01-15 23:26:56'),
-(89,1,'Administrador','DISPATCH_STOCK','Pedido #17','Enviados: 45','2026-01-15 23:27:04'),
-(90,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +45','2026-01-15 23:27:07'),
-(91,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:27:34'),
-(92,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:28:01'),
-(93,1,'Administrador','REQUEST_STOCK','Acetaminofen 500mg','Pide: 10','2026-01-16 14:30:38'),
-(94,1,'Administrador','DISPATCH_STOCK','Pedido #18','Enviados: 25','2026-01-16 14:30:51'),
-(95,3,'Maria Garcia','RECEIVE_STOCK','Acetaminofen 500mg','Recibidos +25','2026-01-16 14:30:57'),
-(96,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:44:32'),
-(97,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:45:50'),
-(98,3,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:50:09'),
-(99,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-16 14:50:12');
+(1,1,'Administrador','LOGIN','Sistema','Inicio de sesión','2026-01-16 15:27:04'),
+(2,2,'Maria Garcia','LOGIN','Sistema','Inicio de sesión','2026-01-16 15:27:21');
 
 /*Table structure for table `branch_requests` */
 
@@ -148,29 +51,9 @@ CREATE TABLE `branch_requests` (
   `status` varchar(20) DEFAULT 'Pending',
   `date` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `branch_requests` */
-
-insert  into `branch_requests`(`id`,`item_name`,`qty`,`sent_qty`,`requested_by`,`branch_name`,`status`,`date`) values 
-(1,'Complejo B Iny.',10,0,'Administrador','Central','Completed','2026-01-15 21:39:31'),
-(2,'Acetaminofen 500mg',10,0,'Maria Garcia','Sede Central','Completed','2026-01-15 22:10:54'),
-(3,'Alcohol Etílico 70%',10,25,'Maria Garcia','Sede Central','Completed','2026-01-15 22:38:06'),
-(4,'Amlodipino 5mg',10,26,'Maria Garcia','Sede Central','Completed','2026-01-15 22:50:04'),
-(5,'Amoxicilina/Clavulánico',10,40,'Maria Garcia','Sede Central','Completed','2026-01-15 22:51:46'),
-(6,'Aspirina Bayer',10,30,'Maria Garcia','Sede Central','Completed','2026-01-15 22:51:48'),
-(7,'Atorvastatina 20mg',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 22:51:49'),
-(8,'Azitromicina 500mg',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 22:51:51'),
-(9,'Azitromicina 500mg',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 22:52:03'),
-(10,'Acetaminofen 500mg',10,55,'Maria Garcia','Sede Central','Completed','2026-01-15 22:53:14'),
-(11,'Amlodipino 5mg',10,20,'Maria Garcia','Sede Central','Completed','2026-01-15 22:54:04'),
-(12,'Acetaminofen 500mg',10,40,'Maria Garcia','Sede Central','Completed','2026-01-15 23:06:19'),
-(13,'Glibenclamida 5mg',10,30,'Maria Garcia','Sede Central','Completed','2026-01-15 23:06:35'),
-(14,'Glibenclamida 5mg',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 23:07:56'),
-(15,'Acetaminofen 500mg',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 23:08:19'),
-(16,'Gentamicina Iny.',10,10,'Maria Garcia','Sede Central','Completed','2026-01-15 23:08:31'),
-(17,'Acetaminofen 500mg',10,45,'Maria Garcia','Sede Central','Completed','2026-01-15 23:26:56'),
-(18,'Acetaminofen 500mg',10,25,'Administrador','Sede Central','Completed','2026-01-16 14:30:38');
 
 /*Table structure for table `branches` */
 
@@ -204,12 +87,9 @@ CREATE TABLE `cash_cuts` (
   `closed_at` datetime DEFAULT NULL,
   `status` varchar(20) DEFAULT 'open',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `cash_cuts` */
-
-insert  into `cash_cuts`(`id`,`user_id`,`open_amount`,`close_amount`,`sales_total`,`discrepancy`,`opened_at`,`closed_at`,`status`) values 
-(1,4,50.00,200.00,0.00,200.00,'2026-01-15 20:31:37','2026-01-15 21:04:16','closed');
 
 /*Table structure for table `customers` */
 
@@ -314,13 +194,9 @@ CREATE TABLE `orders` (
   `voided_by` varchar(100) DEFAULT NULL,
   `voided_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `orders` */
-
-insert  into `orders`(`id`,`patient`,`items`,`total`,`date`,`status`,`void_reason`,`voided_by`,`voided_at`) values 
-(14,'Juan Pérez ','[{\"id\":9,\"name\":\"Amoxicilina 500mg\",\"category\":\"Antibiotic\",\"stock\":150,\"price\":\"12.50\",\"expiryDate\":\"2026-05-23T06:00:00.000Z\",\"threshold\":10,\"qty\":10},{\"id\":3,\"name\":\"Paracetamol 1g\",\"category\":\"Analgesic\",\"stock\":108,\"price\":\"5.00\",\"expiryDate\":\"2027-01-20T06:00:00.000Z\",\"threshold\":10,\"qty\":12}]',185.00,'2026-01-14 22:00:37','Completed',NULL,NULL,NULL),
-(15,'Juan Perez','[{\"id\":50,\"name\":\"Acetaminofen 500mg\",\"category\":\"analgesic\",\"stock\":50,\"price\":\"5.50\",\"expiryDate\":\"2026-06-21T06:00:00.000Z\",\"threshold\":10,\"qty\":4},{\"id\":3,\"name\":\"Paracetamol 1g\",\"category\":\"Analgesic\",\"stock\":120,\"price\":\"5.00\",\"expiryDate\":\"2027-01-20T06:00:00.000Z\",\"threshold\":10,\"qty\":3}]',37.00,'2026-01-15 18:39:27','Completed',NULL,NULL,NULL);
 
 /*Table structure for table `suppliers` */
 
@@ -357,8 +233,8 @@ CREATE TABLE `users` (
 
 insert  into `users`(`id`,`username`,`password`,`role`,`name`) values 
 (1,'admin','1234','Owner','Administrador'),
-(3,'Maria','1234','Pharmacist','Maria Garcia'),
-(4,'Josue','1234','Cashier','Josue Marroquín');
+(2,'Maria','1234','Pharmacist','Maria Garcia'),
+(3,'Josue','1234','Cashier','Josue Marroquín');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
