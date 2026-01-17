@@ -1,4 +1,4 @@
-# 🏥 PharmaPro - Sistema de Gestión Farmacéutica (POS)
+#  PharmaPro - Sistema de Gestión Farmacéutica (POS)
 
 **Estado:** Producción / MVP Listo
 
@@ -6,35 +6,35 @@ PharmaPro es una solución integral de software diseñada para modernizar la ges
 
 ---
 
-## 🚀 Características Principales
+##  Características Principales
 
-### 🛡️ Seguridad y Control
+###  Seguridad y Control
 * **Roles de Usuario:** Acceso diferenciado para Administradores, Farmacéuticos y Cajeros.
 * **Caja Blindada:** Prevención de "robo hormiga". El sistema controla aperturas, cierres y arqueos sin permitir retiros manuales no autorizados.
 * **Auditoría Completa:** Registro inmutable de quién hizo qué (Login, Ventas Anuladas, Ediciones de Stock).
 
-### 💊 Inventario Inteligente
+###  Inventario Inteligente
 * **Gestión Visual:** Soporte para imágenes de productos mediante URL con **Zoom en Alta Resolución**.
 * **Semáforo de Vencimiento:** Alertas automáticas para medicamentos próximos a caducar (90 días) o vencidos.
 * **Stock Bajo:** Filtro rápido para reposición de inventario crítico.
 * **Paginación Optimizada:** Carga eficiente de miles de productos sin trabar el sistema.
 
-### 🛒 Punto de Venta (POS)
+###  Punto de Venta (POS)
 * **Venta Rápida:** Interfaz optimizada para lectores de código de barras.
 * **Ticket Térmico:** Formato listo para imprimir en impresoras de 58mm/80mm.
 * **Anulación Segura:** Reversión automática de stock y dinero al anular una venta (solo Admin).
 
-### 🚚 Logística Multicursal
+###  Logística Multicursal
 * **Transferencias:** Solicitud y envío de mercancía entre la Sede Central y Sucursales.
 * **Validación de Recepción:** El stock solo se suma cuando la sucursal confirma la recepción física.
 
-### 🎨 Experiencia de Usuario (UX)
+###  Experiencia de Usuario (UX)
 * **Modo Oscuro / Claro:** Adaptable a turnos nocturnos o diurnos.
 * **Dashboard:** Gráficas de ventas semanales y KPIs en tiempo real (Total vendido, alertas).
 
 ---
 
-## 🛠️ Tecnologías (Tech Stack)
+##  Tecnologías (Tech Stack)
 
 Este sistema fue construido priorizando velocidad, estabilidad y escalabilidad:
 
@@ -45,7 +45,7 @@ Este sistema fue construido priorizando velocidad, estabilidad y escalabilidad:
 
 ---
 
-## ⚙️ Instalación y Despliegue
+##  Instalación y Despliegue
 
 Sigue estos pasos para instalar el sistema en un entorno local:
 
