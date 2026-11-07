@@ -1,63 +1,64 @@
-#  PharmaPro - Sistema de Gestión Farmacéutica (POS)
+# PharmaPro - Pharmacy Management System (POS)
 
-**Estado:** Producción / MVP Listo
+**Status:** Production / MVP Ready
 
-PharmaPro es una solución integral de software diseñada para modernizar la gestión operativa de farmacias. Combina un **Punto de Venta (POS)** ágil, control de inventario con alertas inteligentes y gestión de logística entre sucursales, todo bajo una interfaz moderna y segura.
-
----
-
-##  Características Principales
-
-###  Seguridad y Control
-* **Roles de Usuario:** Acceso diferenciado para Administradores, Farmacéuticos y Cajeros.
-* **Caja Blindada:** Prevención de "robo hormiga". El sistema controla aperturas, cierres y arqueos sin permitir retiros manuales no autorizados.
-* **Auditoría Completa:** Registro inmutable de quién hizo qué (Login, Ventas Anuladas, Ediciones de Stock).
-
-###  Inventario Inteligente
-* **Gestión Visual:** Soporte para imágenes de productos mediante URL con **Zoom en Alta Resolución**.
-* **Semáforo de Vencimiento:** Alertas automáticas para medicamentos próximos a caducar (90 días) o vencidos.
-* **Stock Bajo:** Filtro rápido para reposición de inventario crítico.
-* **Paginación Optimizada:** Carga eficiente de miles de productos sin trabar el sistema.
-
-###  Punto de Venta (POS)
-* **Venta Rápida:** Interfaz optimizada para lectores de código de barras.
-* **Ticket Térmico:** Formato listo para imprimir en impresoras de 58mm/80mm.
-* **Anulación Segura:** Reversión automática de stock y dinero al anular una venta (solo Admin).
-
-###  Logística Multicursal
-* **Transferencias:** Solicitud y envío de mercancía entre la Sede Central y Sucursales.
-* **Validación de Recepción:** El stock solo se suma cuando la sucursal confirma la recepción física.
-
-###  Experiencia de Usuario (UX)
-* **Modo Oscuro / Claro:** Adaptable a turnos nocturnos o diurnos.
-* **Dashboard:** Gráficas de ventas semanales y KPIs en tiempo real (Total vendido, alertas).
+PharmaPro is a comprehensive software solution designed to modernize pharmacy operations. It combines a fast **Point of Sale (POS)**, inventory control with smart alerts, and logistics management between branches, all within a modern and secure interface.
 
 ---
 
-##  Tecnologías (Tech Stack)
+## Key Features
 
-Este sistema fue construido priorizando velocidad, estabilidad y escalabilidad:
+### Security and Control
+* **User Roles:** Differentiated access for Administrators, Pharmacists, and Cashiers.
+* **Locked-Down Cash Register:** Prevents petty theft. The system controls openings, closings, and cash counts without allowing unauthorized manual withdrawals.
+* **Full Audit Trail:** Immutable record of who did what (logins, voided sales, stock edits).
 
-* **Frontend:** React.js + Tailwind CSS (Diseño Modular y Responsive).
-* **Backend:** Node.js + Express (Arquitectura REST API Moderna con Async/Await).
-* **Base de Datos:** MySQL (Relacional, con soporte de transacciones para integridad financiera).
-* **Gráficos:** Recharts.
+### Smart Inventory
+* **Visual Management:** Support for product images via URL with **High-Resolution Zoom**.
+* **Expiration Traffic Light:** Automatic alerts for medications nearing expiration (90 days) or already expired.
+* **Low Stock:** Quick filter for restocking critical inventory.
+* **Optimized Pagination:** Efficient loading of thousands of products without slowing down the system.
+
+### Point of Sale (POS)
+* **Fast Checkout:** Interface optimized for barcode scanners.
+* **Thermal Receipt:** Format ready to print on 58mm/80mm printers.
+* **Secure Voiding:** Automatic reversal of stock and money when a sale is voided (Admin only).
+
+### Multi-Branch Logistics
+* **Transfers:** Request and shipment of merchandise between the Main Office and Branches.
+* **Receipt Validation:** Stock is only added once the branch confirms physical receipt.
+
+### User Experience (UX)
+* **Dark / Light Mode:** Adaptable to night or day shifts.
+* **Dashboard:** Weekly sales charts and real-time KPIs (total sales, alerts).
 
 ---
 
-##  Instalación y Despliegue
+## Tech Stack
 
-Sigue estos pasos para instalar el sistema en un entorno local:
+This system was built prioritizing speed, stability, and scalability:
 
-### 1. Base de Datos
-* Tener instalado **XAMPP** o **MySQL Workbench**.
-* Crear una base de datos llamada `pharmapro_db`.
-* Importar el script SQL inicial (tablas de `users`, `inventory`, `orders`, `cash_cuts`, `audit_logs`).
-* *Nota:* Asegurarse de ejecutar `ALTER TABLE inventory ADD COLUMN image_url TEXT;` si se actualiza desde una versión anterior.
+* **Frontend:** React.js + Tailwind CSS (modular and responsive design).
+* **Backend:** Node.js + Express (modern REST API architecture with Async/Await).
+* **Database:** MySQL (relational, with transaction support for financial integrity).
+* **Charts:** Recharts.
 
-### 2. Configuración del Servidor (Backend)
+---
+
+## Installation and Deployment
+
+Follow these steps to install the system in a local environment:
+
+### 1. Database
+* Have **XAMPP** or **MySQL Workbench** installed.
+* Create a database named `pharmapro_db`.
+* Import the initial SQL script (tables: `users`, `inventory`, `orders`, `cash_cuts`, `audit_logs`).
+* *Note:* Make sure to run `ALTER TABLE inventory ADD COLUMN image_url TEXT;` if upgrading from a previous version.
+
+### 2. Server Setup (Backend)
 ```bash
 cd backend
 npm install
-# Crear archivo .env con credenciales de BD si es necesario
+# Create a .env file with DB credentials if necessary
 node server.js
+```
