@@ -69,3 +69,13 @@ cd backend
 npm install
 # Create a .env file with your MySQL credentials
 node server.js
+Bash
+# From the root directory
+npm install
+npm run dev
+Demo Credentials
+Owner / Admin: admin / 1234
+
+Pharmacist: Maria / 1234
+
+Cashier: Josue / 1234
