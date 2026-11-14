@@ -66,6 +66,8 @@ node server.js
 <img width="540" height="981" alt="Captura de pantalla 2026-11-13 182301" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" />
 <img width="583" height="1005" alt="Captura de pantalla 2026-11-13 182306" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" />
 <img width="577" height="981" alt="Captura de pantalla 2026-11-13 182345" src="https://github.com/user-attachments/assets/6b3a95d8-4fb1-4ea1-850a-c24f27b3317a" />
+<img width="532" height="950" alt="image" src="https://github.com/user-attachments/assets/9297955e-9e26-47b4-b877-e088c8f7dc6b" />
+
 
 Demo App
 
