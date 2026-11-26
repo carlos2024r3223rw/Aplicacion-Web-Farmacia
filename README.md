@@ -1,81 +1,76 @@
-# PharmaPro - Pharmacy Management System (POS)
+# PharmaPro — Pharmacy Management System
 
-**Status:** Production / MVP Ready
+PharmaPro is a portfolio **MVP** for pharmacy operations. It combines a point of sale, inventory management, expiration and low-stock alerts, staff roles, and branch-to-branch stock transfers.
 
-PharmaPro is a comprehensive software solution (PWA) designed to modernize pharmacy operations. It combines a fast **Point of Sale (POS)**, inventory control with smart alerts, and logistics management between branches, all within a modern and secure interface.
-
----
+> **Demo project:** Use sample data only. Configure the database, credentials, and deployment environment for your own setup before exposing the application to users.
 
 ## Screenshots
 
-| Dashboard & KPIs | POS & Cart | Thermal Receipt | RBAC & Staff | Smart Inventory |
+| Dashboard | Point of sale | Receipt | Staff roles | Inventory |
 | :---: | :---: | :---: | :---: | :---: |
-| <img width="180" alt="Dashboard KPIs" src="https://github.com/user-attachments/assets/39577502-c7d4-4830-b3db-c09426cf0a85" /> | <img width="180" alt="POS Cart" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" /> | <img width="180" alt="Thermal Receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="180" alt="RBAC Staff" src="https://github.com/user-attachments/assets/6b3a95d8-4fb1-4ea1-850a-c24f27b3317a" /> | <img width="180" alt="Smart Inventory" src="https://github.com/user-attachments/assets/9297955e-9e26-47b4-b877-e088c8f7dc6b" /> |
+| <img width="180" alt="Dashboard KPIs" src="https://github.com/user-attachments/assets/39577502-c7d4-4830-b3db-c09426cf0a85" /> | <img width="180" alt="POS cart" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" /> | <img width="180" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="180" alt="Staff roles" src="https://github.com/user-attachments/assets/6b3a95d8-4fb1-4ea1-850a-c24f27b3317a" /> | <img width="180" alt="Inventory" src="https://github.com/user-attachments/assets/9297955e-9e26-47b4-b877-e088c8f7dc6b" /> |
 
----
+## Features
 
-## Key Features
+- **Point of sale:** Product search, cart, checkout, and printable 58 mm / 80 mm receipts.
+- **Inventory:** Product images, stock tracking, CSV export, pagination, and low-stock filtering.
+- **Expiration alerts:** Highlights medicines that are nearing or past their expiration date.
+- **Cash register controls:** Cash opening/closing and cash counts, with role-based permissions.
+- **Audit history:** Records key actions such as logins, voided sales, and inventory changes.
+- **Branch transfers:** Request and ship stock between locations; inventory is added after receipt is confirmed.
+- **Bilingual interface:** English and Spanish, plus light and dark themes.
+- **Dashboard:** Sales charts and operational KPIs.
 
-### Security and Control
-* **User Roles (RBAC):** Differentiated access for Administrators, Pharmacists, and Cashiers.
-* **Locked-Down Cash Register:** Prevents petty theft. The system controls openings, closings, and cash counts without allowing unauthorized manual withdrawals.
-* **Full Audit Trail:** Immutable record of who did what (logins, voided sales, stock edits).
+## Technology
 
-### Smart Inventory
-* **Visual Management:** Support for product images with **High-Resolution Zoom** and CSV inventory export.
-* **Expiration Traffic Light:** Automatic alerts for medications nearing expiration (90 days) or already expired.
-* **Low Stock:** Quick filter for restocking critical inventory.
-* **Optimized Pagination:** Efficient loading of thousands of products without slowing down the system.
+- React, TypeScript, Tailwind CSS, and Recharts
+- Node.js and Express
+- MySQL
+- Progressive Web App (PWA) interface
 
-### Point of Sale (POS)
-* **Fast Checkout:** Interface optimized for barcode scanners and mobile/tablet PWA usage.
-* **Thermal Receipt:** Format ready to print on 58mm/80mm printers.
-* **Secure Voiding:** Automatic reversal of stock and money when a sale is voided (Admin only).
+## Run locally
 
-### Multi-Branch Logistics
-* **Transfers:** Request and shipment of merchandise between the Main Office and Branches.
-* **Receipt Validation:** Stock is only added once the branch confirms physical receipt.
+### 1. Configure the database
 
-### User Experience (UX)
-* **Bilingual & Theme Support:** Instant switching between English/Spanish and Dark/Light Mode.
-* **Dashboard:** Weekly sales charts and real-time KPIs (total sales, expiration alerts).
+1. Install and start a local MySQL or MariaDB server, such as XAMPP or Laragon.
+2. Create a database named `pharmapro_db`.
+3. Import the SQL schema or seed file included in the repository.
+4. Configure the backend database connection using your local settings. Do not commit real credentials.
 
----
+If you are upgrading an existing database, check the schema and migrations before applying changes. The older setup may require an `image_url` column in the inventory table.
 
-## Tech Stack
+### 2. Start the backend
 
-This system was built prioritizing speed, stability, and scalability:
-
-* **Frontend:** React.js + TypeScript + Tailwind CSS (PWA-ready, modular and responsive design).
-* **Backend:** Node.js + Express (modern REST API architecture with Async/Await).
-* **Database:** MySQL (relational, with transaction support for financial integrity).
-* **Charts:** Recharts.
-
----
-
-## Installation and Deployment
-
-Follow these steps to install the system in a local environment:
-
-### 1. Database
-* Have **XAMPP**, **Laragon**, or **MySQL Workbench** installed.
-* Create a database named `pharmapro_db`.
-* Import the initial SQL script `base de datos utilizada.sql` (tables: `users`, `inventory`, `orders`, `cash_cuts`, `audit_logs`).
-* *Note:* Make sure to run `ALTER TABLE inventory ADD COLUMN image_url TEXT;` if upgrading from a previous version.
-
-### 2. Server Setup (Backend)
 ```bash
 cd backend
 npm install
-# Create a .env file with your MySQL credentials
+```
+
+Create a local `.env` file with the database settings expected by the backend, then start the API:
+
+```bash
 node server.js
-Bash
-# From the root directory
+```
+
+### 3. Start the frontend
+
+From the repository root, open a second terminal:
+
+```bash
 npm install
 npm run dev
-Demo Credentials
-Owner / Admin: admin / 1234
+```
 
-Pharmacist: Maria / 1234
+Open the local URL printed by the frontend development server. Confirm that its API configuration points to the backend you started.
 
-Cashier: Josue / 1234
+## Demo accounts
+
+The project has seeded demo accounts in its database. Their credentials are for local demonstration only. Check the seed data for the current account names, change the passwords before deployment, and never reuse these credentials for a real system.
+
+## Security and scope
+
+This is a portfolio project and has not been presented as a certified pharmacy or regulatory-compliance system. Do not use it to manage real patient data, prescriptions, payments, or medication inventory without a separate security, privacy, and operational review.
+
+## License
+
+No license file is currently included. Contact the author before reusing or distributing this project.
