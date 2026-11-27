@@ -31,7 +31,8 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 
 | Inventory |
 | :---: |
-| <img width="340" alt="Inventory" src="https://github.com/user-attachments/assets/9297955e-9e26-47b4-b877-e088c8f7dc6b" /> |
+| <img width="1847" height="721" alt="inventory" src="https://github.com/user-attachments/assets/d122f12d-6ae2-4d61-ab33-b099ea78dfb5" />
+ |
 
 ## Built with
 
