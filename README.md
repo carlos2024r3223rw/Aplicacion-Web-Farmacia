@@ -22,25 +22,15 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 
 | Dashboard | Point of sale |
 | :---: | :---: |
-| <img width="1875" height="951" alt="Captura de pantalla 2026-11-24 164543" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" /> |
- | <img width="1892" height="956" alt="image" src="https://github.com/user-attachments/assets/3b7c245f-a81f-40bd-8d0c-b0de243e1d39" />
- |
+| <img width="1875" height="951" alt="PharmaPro dashboard" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" /> | <img width="1892" height="956" alt="PharmaPro point of sale" src="https://github.com/user-attachments/assets/3b7c245f-a81f-40bd-8d0c-b0de243e1d39" /> |
 
 | Receipt | Staff roles |
 | :---: | :---: |
-| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | 
-  <img width="1861" height="892" alt="image" src="https://github.com/user-attachments/assets/ba225d65-3602-473c-bf6f-5a89231fe785" />
- |
+| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="1861" height="892" alt="PharmaPro staff roles" src="https://github.com/user-attachments/assets/ba225d65-3602-473c-bf6f-5a89231fe785" /> |
 
-| Inventory |
-| :---: |
-| <img width="1847" height="721" alt="inventory" src="https://github.com/user-attachments/assets/d122f12d-6ae2-4d61-ab33-b099ea78dfb5" />
- |
- | Creation Customers |
-| :---: |
-| <img width="546" height="707" alt="image" src="https://github.com/user-attachments/assets/4ab85955-23e2-472d-99fc-ecd4a67539d5" />
- |
-
+| Inventory | Customer creation |
+| :---: | :---: |
+| <img width="1847" height="721" alt="PharmaPro inventory" src="https://github.com/user-attachments/assets/d122f12d-6ae2-4d61-ab33-b099ea78dfb5" /> | <img width="546" height="707" alt="PharmaPro customer creation" src="https://github.com/user-attachments/assets/4ab85955-23e2-472d-99fc-ecd4a67539d5" /> |
 ## Built with
 
 | Area | Technology |
