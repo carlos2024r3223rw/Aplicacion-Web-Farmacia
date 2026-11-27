@@ -28,7 +28,8 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 
 | Receipt | Staff roles |
 | :---: | :---: |
-| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="1861" height="892" alt="image" src="https://github.com/user-attachments/assets/ba225d65-3602-473c-bf6f-5a89231fe785" />
+| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | 
+  <img width="1861" height="892" alt="image" src="https://github.com/user-attachments/assets/ba225d65-3602-473c-bf6f-5a89231fe785" />
  |
 
 | Inventory |
