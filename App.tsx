@@ -1,5 +1,13 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { BarChart, Bar, ResponsiveContainer, XAxis, Tooltip, CartesianGrid, YAxis, LabelList } from 'recharts';
+import { LoginScreen } from './components/LoginScreen';
+import { DashboardView } from './components/dashboard/DashboardView';
+import { POSView } from './components/pos/POSView';
+import { InventoryView } from './components/inventory/InventoryView';
+import { CustomersView } from './components/customers/CustomersView';
+import { SuppliersView } from './components/suppliers/SuppliersView';
+import { OrdersView } from './components/orders/OrdersView';
+import { SettingsView } from './components/settings/SettingsView';
 
 const Icons = {
   Edit: (props: any) => <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" /></svg>,
@@ -47,6 +55,14 @@ const StatCard = ({ label, value, variant = 'blue', onClick, theme }: any) => {
   );
 };
 
+const EmptyState = ({ title, text }: { title: string; text: string }) => (
+  <div className="rounded-2xl border border-dashed border-neutral-700/60 px-6 py-12 text-center opacity-80">
+    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/10 text-xl text-blue-500">+</div>
+    <p className="font-bold text-sm">{title}</p>
+    <p className="mx-auto mt-1 max-w-sm text-xs opacity-50">{text}</p>
+  </div>
+);
+
 const BottomNav = ({ activeTab, onTabChange, labels, theme, role }: any) => {
   if (!role) return null;
   const r = role.toLowerCase();
@@ -73,21 +89,36 @@ const BottomNav = ({ activeTab, onTabChange, labels, theme, role }: any) => {
     ];
   }
   return (
-    <div className={`fixed bottom-0 left-0 right-0 w-full max-w-md mx-auto ${theme === 'dark' ? 'bg-black/90 border-neutral-800' : 'bg-white/90 border-gray-200'} backdrop-blur-xl border-t p-2 pb-6 flex justify-around items-center z-50`}>
-      {tabs.map((tab) => (<button key={tab.id} onClick={() => onTabChange(tab.id)} className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'text-blue-500 scale-110' : (theme === 'dark' ? 'text-neutral-500 hover:text-neutral-300' : 'text-gray-400 hover:text-gray-600')}`}><tab.icon className="w-6 h-6" /><span className="text-[9px] font-bold uppercase tracking-wider">{tab.label}</span>{activeTab === tab.id && <div className="w-1 h-1 bg-blue-500 rounded-full mt-1 animate-pulse" />}</button>))}
+    <div className={`fixed bottom-0 left-0 right-0 w-full ${theme === 'dark' ? 'bg-black/95 border-neutral-800' : 'bg-white/95 border-gray-200'} backdrop-blur-xl border-t px-2 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-2 flex justify-start overflow-x-auto z-50 lg:hidden no-scrollbar`}>
+      {tabs.map((tab) => (<button key={tab.id} onClick={() => onTabChange(tab.id)} className={`flex-none w-[72px] flex flex-col items-center gap-1 p-2 rounded-xl transition-all duration-300 ${activeTab === tab.id ? 'text-blue-500' : (theme === 'dark' ? 'text-neutral-500 hover:text-neutral-300' : 'text-gray-400 hover:text-gray-600')}`}><tab.icon className="w-5 h-5" /><span className="text-[8px] font-bold uppercase tracking-wide whitespace-nowrap">{tab.label}</span>{activeTab === tab.id && <div className="w-1 h-1 bg-blue-500 rounded-full mt-0.5 animate-pulse" />}</button>))}
     </div>
   );
+};
+
+const SideNav = ({ activeTab, onTabChange, labels, theme, role, user }: any) => {
+  if (!role) return null;
+  const r = role.toLowerCase();
+  const tabs: any[] = r === 'cashier' || r === 'cajero' || r === 'staff'
+    ? [{ id: 'POS', icon: Icons.Cart, label: labels.POS }, { id: 'Clients', icon: Icons.Users, label: labels.clients }, { id: 'Settings', icon: Icons.Settings, label: labels.settings }]
+    : r === 'pharmacist' || r === 'farmaceutico' || r === 'farmacéutico'
+      ? [{ id: 'POS', icon: Icons.Cart, label: labels.POS }, { id: 'Inventory', icon: Icons.Inventory, label: labels.inventory }, { id: 'Orders', icon: Icons.Orders, label: labels.orders }, { id: 'Clients', icon: Icons.Users, label: labels.clients }, { id: 'Settings', icon: Icons.Settings, label: labels.settings }]
+      : [{ id: 'Dashboard', icon: Icons.Dashboard, label: labels.dashboard }, { id: 'POS', icon: Icons.Cart, label: labels.POS }, { id: 'Inventory', icon: Icons.Inventory, label: labels.inventory }, { id: 'Clients', icon: Icons.Users, label: labels.clients }, { id: 'Suppliers', icon: Icons.Truck, label: labels.suppliers }, { id: 'Orders', icon: Icons.Orders, label: labels.orders }, { id: 'Settings', icon: Icons.Settings, label: labels.settings }];
+  return <aside className={`hidden lg:flex fixed inset-y-0 left-0 z-50 w-64 flex-col border-r p-6 ${theme === 'dark' ? 'border-neutral-900 bg-[#090909]' : 'border-gray-200 bg-white'}`}>
+    <div className="flex items-center gap-3 mb-10"><div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg"><span className="text-xl font-bold italic text-white">P+</span></div><div><p className="text-lg font-bold leading-none">PharmaPro</p><p className="text-[9px] uppercase tracking-[0.2em] opacity-40 mt-1">Gestión farmacéutica</p></div></div>
+    <nav className="space-y-2">{tabs.map((tab) => <button key={tab.id} onClick={() => onTabChange(tab.id)} className={`w-full flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition-colors ${activeTab === tab.id ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/20' : theme === 'dark' ? 'text-neutral-500 hover:bg-neutral-900 hover:text-white' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}><tab.icon className="w-5 h-5" />{tab.label}</button>)}</nav>
+    <div className={`mt-auto rounded-2xl border p-4 ${theme === 'dark' ? 'border-neutral-800 bg-neutral-900/60' : 'border-gray-200 bg-gray-50'}`}><p className="font-bold text-sm truncate">{user?.name}</p><p className="text-[10px] uppercase tracking-wider opacity-50 mt-1">{user?.role}</p></div>
+  </aside>;
 };
 
 
 const categoryTranslations: any = { "Antibiotic": { EN: "Antibiotic", ES: "Antibiótico" }, "Analgesic": { EN: "Analgesic", ES: "Analgésico" }, "Cardiac": { EN: "Cardiac", ES: "Cardíaco" }, "Diabetes": { EN: "Diabetes", ES: "Diabetes" }, "Statins": { EN: "Statins", ES: "Estatinas" }, "Misc": { EN: "Misc", ES: "Varios" } };
 const translations: any = { 
-    EN: { dashboard: "Dashboard", inventory: "Inventory", orders: "Orders", settings: "Settings", clients: "Clients", POS: "POS", suppliers: "Suppliers", noClients: "No registered clients", close: "Close", scannerMode: "Scanner", language: "Language & Theme", darkMode: "Dark Mode", lightMode: "Light Mode", security: "Security", logout: "Sign Out", logoutConfirm: "Are you sure you want to log out?", staffMgmt: "Staff Management", changePass: "Change Password", exportCsv: "Export Inventory (CSV)", confirmTitle: "Confirm", yes: "Yes", no: "No", openBox: "OPEN SHIFT", closeBox: "CLOSE SHIFT", salesHistory: "Sales History", todaySales: "Today Sales", pendingPresc: "Pending", lowStock: "Low Stock", expiredCount: "Expired", warningCount: "Expiring", addClient: "Add Client", pass: "Password", name: "Name", user: "Username" }, 
-    ES: { dashboard: "Panel", inventory: "Inventario", orders: "Pedidos", settings: "Ajustes", clients: "Clientes", POS: "Caja", suppliers: "Prov.", noClients: "No hay clientes registrados", close: "Cerrar", scannerMode: "Escáner", language: "Idioma y Tema", darkMode: "Modo Oscuro", lightMode: "Modo Claro", security: "Seguridad", logout: "Cerrar Sesión", logoutConfirm: "¿Seguro que quieres cerrar sesión?", staffMgmt: "Gestión de Personal", changePass: "Cambiar Contraseña", exportCsv: "Exportar Inventario (CSV)", confirmTitle: "Confirmación", yes: "Sí", no: "No", openBox: "ABRIR CAJA", closeBox: "CERRAR CAJA", salesHistory: "Historial de Ventas", todaySales: "Ventas Hoy", pendingPresc: "Pendientes", lowStock: "Stock Bajo", expiredCount: "Vencidos", warningCount: "Por Vencer", addClient: "Añadir Cliente", pass: "Contraseña", name: "Nombre", user: "Usuario" } 
+    EN: { dashboard: "Dashboard", inventory: "Inventory", orders: "Orders", settings: "Settings", clients: "Clients", POS: "POS", suppliers: "Suppliers", noClients: "No registered clients", close: "Close", scannerMode: "Scanner", language: "Language & Theme", darkMode: "Dark Mode", lightMode: "Light Mode", security: "Security", logout: "Sign Out", logoutConfirm: "Are you sure you want to log out?", staffMgmt: "Staff Management", branches: "Manage Branches", admin: "Administration", changePass: "Change Password", exportCsv: "Export Inventory (CSV)", confirmTitle: "Confirm", yes: "Yes", no: "No", openBox: "OPEN SHIFT", closeBox: "CLOSE SHIFT", salesHistory: "Sales History", todaySales: "Today Sales", pendingPresc: "Pending", lowStock: "Low Stock", expiredCount: "Expired", warningCount: "Expiring", addClient: "Add Client", pass: "Password", name: "Name", user: "Username", workspace: "Workspace", weeklySales: "Weekly Sales", last7Days: "Last 7 days", stockRequests: "Stock Requests (Admin)", noPendingRequests: "No pending requests.", noSalesYet: "No sales registered yet", noSalesHint: "Sales will appear here after your first checkout.", send: "Send", requestFrom: "From", requested: "Requested", searchProduct: "Search product...", scanProduct: "SCAN...", emptyCart: "Cart is empty", emptyCartHint: "Search for a product to start the sale.", optionalCustomer: "Customer (optional)", noPhone: "No phone", removeCustomer: "Remove customer", addCustomer: "Add customer", decreaseQty: "Decrease quantity", increaseQty: "Increase quantity", removeProduct: "Remove product", total: "TOTAL", charge: "CHARGE", branchList: "Branches", newBranch: "New Branch", branchName: "Branch Name", address: "Address", phone: "Phone", save: "Save", deleteBranch: "Delete branch?", newStaff: "New Employee", editStaff: "Edit Employee", addStaff: "Add Employee", deleteStaff: "Delete employee?", fullName: "Full Name", pharmacist: "Pharmacist", cashier: "Cashier", staffRole: "Staff", newPassword: "New Password", saveChanges: "Save Changes", created: "Created", updated: "Changes saved", deleted: "Deleted", branchCreated: "Branch created", generalCustomer: "General Customer", centralBranch: "Central Branch", receiptCustomer: "Customer", receiptTicket: "Receipt #", receiptCashier: "Cashier", receiptQty: "Qty", receiptItem: "Item", receiptThanks: "Thank you for your purchase", receiptSystem: "PharmaPro System v10.1", print: "PRINT", receiptTaxId: "Tax ID", receiptRegistration: "Tax/Reg", newClient: "New Customer", editClient: "Edit Customer", customerName: "Customer name", phoneNumber: "Phone number", optionalTaxId: "Tax ID (optional)", cancel: "Cancel", deleteClient: "Delete customer", deleteClientConfirm: "Delete customer?" },
+    ES: { dashboard: "Panel", inventory: "Inventario", orders: "Pedidos", settings: "Ajustes", clients: "Clientes", POS: "Caja", suppliers: "Prov.", noClients: "No hay clientes registrados", close: "Cerrar", scannerMode: "Escáner", language: "Idioma y Tema", darkMode: "Modo Oscuro", lightMode: "Modo Claro", security: "Seguridad", logout: "Cerrar Sesión", logoutConfirm: "¿Seguro que quieres cerrar sesión?", staffMgmt: "Gestión de Personal", branches: "Gestionar Sucursales", admin: "Administración", changePass: "Cambiar Contraseña", exportCsv: "Exportar Inventario (CSV)", confirmTitle: "Confirmación", yes: "Sí", no: "No", openBox: "ABRIR CAJA", closeBox: "CERRAR CAJA", salesHistory: "Historial de Ventas", todaySales: "Ventas Hoy", pendingPresc: "Pendientes", lowStock: "Stock Bajo", expiredCount: "Vencidos", warningCount: "Por Vencer", addClient: "Añadir Cliente", pass: "Contraseña", name: "Nombre", user: "Usuario", workspace: "Área de trabajo", weeklySales: "Ventas semanales", last7Days: "Últimos 7 días", stockRequests: "Solicitudes de stock (Admin)", noPendingRequests: "No hay pedidos pendientes.", noSalesYet: "Aún no hay ventas registradas", noSalesHint: "Las ventas aparecerán aquí cuando cobres tu primera orden.", send: "Enviar", requestFrom: "De", requested: "Piden", searchProduct: "Buscar producto...", scanProduct: "ESCANEA...", emptyCart: "Carrito vacío", emptyCartHint: "Busca un producto para iniciar la venta.", optionalCustomer: "Cliente (opcional)", noPhone: "Sin teléfono", removeCustomer: "Quitar cliente", addCustomer: "Añadir cliente", decreaseQty: "Reducir cantidad", increaseQty: "Aumentar cantidad", removeProduct: "Eliminar producto", total: "TOTAL", charge: "COBRAR", branchList: "Sucursales", newBranch: "Nueva Sucursal", branchName: "Nombre Sucursal", address: "Dirección", phone: "Teléfono", save: "Guardar", deleteBranch: "¿Borrar Sucursal?", newStaff: "Nuevo Empleado", editStaff: "Editar Empleado", addStaff: "Añadir Empleado", deleteStaff: "¿Eliminar Empleado?", fullName: "Nombre Completo", pharmacist: "Farmacéutico", cashier: "Cajero", staffRole: "Personal", newPassword: "Nueva Contraseña", saveChanges: "Guardar Cambios", created: "Creado", updated: "Cambios guardados", deleted: "Eliminado", branchCreated: "Sucursal creada", generalCustomer: "Cliente General", centralBranch: "Sucursal Centro", receiptCustomer: "Cliente", receiptTicket: "Ticket #", receiptCashier: "Cajero", receiptQty: "Cant", receiptItem: "Producto", receiptThanks: "Gracias por su compra", receiptSystem: "Sistema PharmaPro v10.1", print: "IMPRIMIR", receiptTaxId: "RNC", receiptRegistration: "DTE/Reg", newClient: "Nuevo cliente", editClient: "Editar cliente", customerName: "Nombre del cliente", phoneNumber: "Número de teléfono", optionalTaxId: "RNC (opcional)", cancel: "Cancelar", deleteClient: "Eliminar cliente", deleteClientConfirm: "¿Borrar cliente?" }
 };
 
 const App = () => {
-  const API_URL = 'http://192.168.1.177:3001'; 
+  const API_URL = (import.meta.env.VITE_API_URL as string) || '';
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -131,13 +162,18 @@ const App = () => {
   const [toast, setToast] = useState({ message: '', visible: false });
   const [confirmModal, setConfirmModal] = useState<any>({ isOpen: false, type: null, id: null, message: '' });
   const [cashModal, setCashModal] = useState({ isOpen: false, type: 'open' }); 
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState('');
   
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const t = (key: string) => translations[language][key] || key;
+  const sectionTitle = ({ Dashboard: t('dashboard'), POS: t('POS'), Inventory: t('inventory'), Clients: t('clients'), Suppliers: t('suppliers'), Orders: t('orders'), Settings: t('settings') } as any)[activeTab] || 'PharmaPro';
   const showToast = (message: string) => { setToast({ message, visible: true }); setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 3000); };
+
+  useEffect(() => { document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }); }, [activeTab]);
 
   const resetFilters = () => { setFilterCategory('All'); setFilterLowStock(false); setFilterExpiry('All'); setSearchQuery(''); };
   const goToFilter = (type: string) => { setActiveTab('Inventory'); resetFilters(); if (type === 'expired') setFilterExpiry('expired'); if (type === 'warning') setFilterExpiry('warning'); if (type === 'lowStock') setFilterLowStock(true); };
@@ -157,16 +193,17 @@ const App = () => {
     if (diffDays < 0) return 'expired'; if (diffDays < 90) return 'warning'; return 'good';
   };
 
-  const loadAllData = () => {
-    fetch(`${API_URL}/inventory`).then(r => r.json()).then(setInventory).catch(console.error);
-    fetch(`${API_URL}/users`).then(r => r.json()).then(setStaffList).catch(console.error);
-    fetch(`${API_URL}/orders`).then(r => r.json()).then(setOrders).catch(console.error);
-    fetch(`${API_URL}/customers`).then(r => r.json()).then(setCustomers).catch(console.error);
-    fetch(`${API_URL}/suppliers`).then(r => r.json()).then(setSuppliers).catch(console.error);
-    fetch(`${API_URL}/branches`).then(r => r.json()).then(setBranches).catch(console.error);
-    fetch(`${API_URL}/branch-requests`).then(r => r.json()).then(setRequests).catch(console.error);
-    fetch(`${API_URL}/stats/weekly`).then(r => r.json()).then(setChartData).catch(console.error);
-    if(currentUser) checkActiveShift();
+  const loadAllData = async () => {
+    try {
+      const responses = await Promise.all(['/inventory', '/users', '/orders', '/customers', '/suppliers', '/branches', '/branch-requests', '/stats/weekly'].map(endpoint => fetch(`${API_URL}${endpoint}`)));
+      if (responses.some(response => !response.ok)) throw new Error('API response error');
+      const [inventoryData, usersData, ordersData, customersData, suppliersData, branchesData, requestsData, weeklyData] = await Promise.all(responses.map(response => response.json()));
+      setInventory(inventoryData); setStaffList(usersData); setOrders(ordersData); setCustomers(customersData); setSuppliers(suppliersData); setBranches(branchesData); setRequests(requestsData); setChartData(weeklyData); setApiError('');
+      if (currentUser) checkActiveShift();
+    } catch (error) {
+      console.error(error);
+      setApiError('No se pudieron cargar los datos. Verifica que el servidor local esté activo.');
+    } finally { setIsLoading(false); }
   };
 
   useEffect(() => {
@@ -255,111 +292,44 @@ const App = () => {
   
   const updateCustomer = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPut(`/customers/${editingCustomer.id}`, { name: fd.get('name'), phone: fd.get('phone'), address: fd.get('address'), rnc: fd.get('rnc') }, "Actualizado"); setEditingCustomer(null); };
   const addCustomer = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPost('/customers', { name: fd.get('name'), phone: fd.get('phone'), address: fd.get('address'), rnc: fd.get('rnc') }, "Creado"); setIsAddingCustomer(false); if(activeTab==='POS') setPosCustomerSearch(fd.get('name') as string); };
-  const handleUpdateStaff = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); const userId = editingStaff ? (editingStaff.id || editingStaff.ID) : (currentUser.id || currentUser.ID); genericPut(`/users/${userId}`, { name: fd.get('name') || currentUser.name, role: fd.get('role') || currentUser.role, username: fd.get('username') || currentUser.username, password: fd.get('password') }, "Datos Actualizados"); setEditingStaff(null); setIsChangingPass(false); };
-  const addStaffMember = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPost('/users', { name: fd.get('name'), role: fd.get('role'), username: fd.get('username'), password: fd.get('password') }, "Creado"); setIsAddingStaff(false); };
-  const addBranch = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPost('/branches', { name: fd.get('name'), address: fd.get('address'), phone: fd.get('phone') }, "Sucursal Creada"); setIsAddingBranch(false); };
+  const handleUpdateStaff = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); const userId = editingStaff ? (editingStaff.id || editingStaff.ID) : (currentUser.id || currentUser.ID); genericPut(`/users/${userId}`, { name: fd.get('name') || currentUser.name, role: fd.get('role') || currentUser.role, username: fd.get('username') || currentUser.username, password: fd.get('password') }, t('updated')); setEditingStaff(null); setIsChangingPass(false); };
+  const addStaffMember = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPost('/users', { name: fd.get('name'), role: fd.get('role'), username: fd.get('username'), password: fd.get('password') }, t('created')); setIsAddingStaff(false); };
+  const addBranch = (e: any) => { e.preventDefault(); const fd = new FormData(e.target); genericPost('/branches', { name: fd.get('name'), address: fd.get('address'), phone: fd.get('phone') }, t('branchCreated')); setIsAddingBranch(false); };
 
-  const executeDelete = () => { const { type, id } = confirmModal; if (type === 'delete_product') genericDelete(`/inventory/${id}`, "Eliminado"); else if (type === 'delete_staff') genericDelete(`/users/${id}`, "Eliminado"); else if (type === 'delete_customer') genericDelete(`/customers/${id}`, "Eliminado"); else if (type === 'delete_supplier') genericDelete(`/suppliers/${id}`, "Eliminado"); else if (type === 'delete_branch') genericDelete(`/branches/${id}`, "Eliminado"); else if (type === 'void_order') handleVoidOrder(); else if (type === 'logout') { setIsLoggedIn(false); setCurrentUser(null); setCart([]); setActiveTab('Dashboard'); setConfirmModal({ isOpen: false }); showToast("Sesión Cerrada"); } };
+  const executeDelete = () => { const { type, id } = confirmModal; if (type === 'delete_product') genericDelete(`/inventory/${id}`, "Eliminado"); else if (type === 'delete_staff') genericDelete(`/users/${id}`, t('deleted')); else if (type === 'delete_customer') genericDelete(`/customers/${id}`, "Eliminado"); else if (type === 'delete_supplier') genericDelete(`/suppliers/${id}`, "Eliminado"); else if (type === 'delete_branch') genericDelete(`/branches/${id}`, t('deleted')); else if (type === 'void_order') handleVoidOrder(); else if (type === 'logout') { setIsLoggedIn(false); setCurrentUser(null); setCart([]); setActiveTab('Dashboard'); setConfirmModal({ isOpen: false }); showToast("Sesión Cerrada"); } };
 
   const bgMain = theme === 'dark' ? 'bg-black text-white' : 'bg-gray-50 text-gray-900';
   const bgCard = theme === 'dark' ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-gray-200 shadow-sm';
   const inputClass = theme === 'dark' ? 'bg-black border-neutral-800 text-white' : 'bg-gray-50 border-gray-300 text-gray-900';
 
-  if (!isLoggedIn) return (<div className={`min-h-screen flex flex-col items-center justify-center p-6 ${bgMain}`}><h1 className="text-3xl font-black mb-8">PharmaPro</h1><form onSubmit={handleLogin} className="w-full max-w-sm space-y-4"><input name="user" placeholder="Usuario" className={`w-full p-4 rounded-2xl border ${inputClass}`} /><input type="password" name="pass" placeholder="Contraseña" className={`w-full p-4 rounded-2xl border ${inputClass}`} /><button className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold">Entrar</button></form></div>);
+  if (!isLoggedIn) return <LoginScreen onSubmit={handleLogin} />;
 
   return (
-    <div className={`h-screen flex flex-col font-sans max-w-md mx-auto relative overflow-hidden ${bgMain}`}>
+    <div className={`min-h-screen flex flex-col font-sans relative ${bgMain}`}>
       <style>{`@media print { body * { visibility: hidden; } #print-area, #print-area * { visibility: visible; } #print-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; background-color: white; color: black; } .no-print { display: none !important; } @page { size: auto; margin: 0mm; } }`}</style>
       {toast.visible && <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] bg-black text-white px-6 py-3 rounded-full font-bold shadow-2xl border border-neutral-800 animate-bounce">{toast.message}</div>}
-      <header className={`flex-shrink-0 px-6 py-4 border-b flex items-center justify-between backdrop-blur-md z-40 ${theme === 'dark' ? 'border-neutral-900 bg-black/50' : 'border-gray-200 bg-white/50'}`}><div className="flex items-center gap-3"><div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg"><span className="text-xl font-bold italic text-white">P+</span></div><h1 className="text-lg font-bold">PharmaPro</h1></div><div className="text-xs text-right opacity-50"><p>{currentUser?.name}</p><p className="uppercase font-bold text-[10px]">{currentUser?.role}</p></div></header>
+      <SideNav activeTab={activeTab} onTabChange={setActiveTab} labels={translations[language]} theme={theme} role={currentUser?.role} user={currentUser} />
+      <header className={`flex-shrink-0 px-6 py-4 border-b flex items-center justify-between backdrop-blur-md z-40 lg:pl-72 ${theme === 'dark' ? 'border-neutral-900 bg-black/50' : 'border-gray-200 bg-white/50'}`}><div className="flex items-center gap-3 lg:hidden"><div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg"><span className="text-xl font-bold italic text-white">P+</span></div><h1 className="text-lg font-bold">PharmaPro</h1></div><div className="hidden lg:block"><p className="text-xs uppercase tracking-[0.2em] opacity-40">{t('workspace')}</p><h1 className="text-2xl font-black mt-1">{sectionTitle}</h1></div><div className="text-xs text-right opacity-50 lg:mr-10"><p>{currentUser?.name}</p><p className="uppercase font-bold text-[10px]">{currentUser?.role}</p></div></header>
       
-      <main className="flex-1 overflow-y-auto px-6 pt-6 pb-24 scroll-smooth">
-        {activeTab === 'Dashboard' && ( <div className="space-y-6">
-            {['admin','owner'].includes(currentUser?.role?.toLowerCase()) && <StatCard label={t('todaySales')} value={`$${chartData.reduce((a,b)=>a+Number(b.v),0).toFixed(2)}`} variant="green" theme={theme} />}
-            <div className="grid grid-cols-3 gap-2"><StatCard label={t('lowStock')} value={inventory.filter(i=>i.stock<=10).length} variant="orange" onClick={() => goToFilter('lowStock')} theme={theme} /><StatCard label={t('expiredCount')} value={inventory.filter(i=>getExpiryStatus(i.expiryDate)==='expired').length} variant="red" onClick={() => goToFilter('expired')} theme={theme} /><StatCard label={t('warningCount')} value={inventory.filter(i=>getExpiryStatus(i.expiryDate)==='warning').length} variant="yellow" onClick={() => goToFilter('warning')} theme={theme} /></div>
-            {['admin','owner'].includes(currentUser?.role?.toLowerCase()) && (
-                <>
-                    <div className={`p-4 rounded-2xl border ${bgCard}`}><h3 className="text-xs font-bold mb-4 ml-2">Ventas Semanales</h3><ResponsiveContainer width="100%" height={220}><BarChart data={chartData} margin={{top:20}}><CartesianGrid strokeDasharray="3 3" opacity={0.1} /><XAxis dataKey="day" stroke="#555" fontSize={12} tickLine={false} axisLine={false} /><YAxis hide /><Tooltip cursor={{fill: 'transparent'}} contentStyle={{ backgroundColor: '#171717', border: '1px solid #333', borderRadius: '8px', fontSize: '12px', color: '#fff' }} /><Bar dataKey="v" fill="#3b82f6" radius={[4, 4, 0, 0]}><LabelList dataKey="v" position="top" fill="#888" fontSize={10} formatter={(v)=>`$${v}`} /></Bar></BarChart></ResponsiveContainer></div>
-                    <div className={`p-5 rounded-2xl border ${bgCard}`}><h3 className="text-sm font-bold mb-4 flex items-center gap-2"><Icons.Truck className="w-5 h-5 text-orange-500"/> Solicitudes de Stock (Admin)</h3>{requests.filter(r => r.status === 'Pending').length === 0 ? (<p className="text-xs opacity-40 text-center py-4">No hay pedidos pendientes.</p>) : (<div className="space-y-3 max-h-60 overflow-y-auto">{requests.filter(r => r.status === 'Pending').map(req => (<div key={req.id} className="flex justify-between items-center p-3 border rounded-xl bg-orange-500/5 border-orange-500/20"><div><p className="font-bold text-sm text-orange-500">{req.item_name} (x{req.qty})</p><p className="text-[10px] opacity-60">De: {req.requested_by} • {req.branch_name}</p><p className="text-[9px] opacity-40">{new Date(req.date).toLocaleDateString()}</p></div><div className="flex gap-2"><button onClick={async () => { const sentQty = prompt(`Piden ${req.qty}. ¿Cuántos envías?`, req.qty); if(sentQty) await genericPut(`/branch-requests/${req.id}/send`, { status: 'Sent', sentQty: parseInt(sentQty) }, "Enviado"); }} className="px-3 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">Enviar</button></div></div>))}</div>)}</div>
-                </>
-            )}
-        </div> )}
+      <main className="flex-1 overflow-y-auto px-6 pt-6 pb-28 scroll-smooth lg:ml-64 lg:px-10 lg:pt-8 lg:pb-10">
+        <div className="mx-auto w-full max-w-6xl">
+        <div className="mb-6 lg:hidden"><p className="text-[10px] uppercase tracking-[0.2em] opacity-40">{t('workspace')}</p><h2 className="text-2xl font-black mt-1">{sectionTitle}</h2></div>
+        {apiError && <div role="alert" className="mb-5 flex items-center justify-between gap-4 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-400"><span>{apiError}</span><button onClick={loadAllData} className="rounded-lg bg-rose-500/15 px-3 py-2 text-xs font-bold">Reintentar</button></div>}
+        {isLoading && <div className="mb-5 flex items-center gap-3 rounded-2xl border border-blue-500/20 bg-blue-500/5 px-4 py-3 text-sm text-blue-400"><span className="h-2 w-2 animate-pulse rounded-full bg-blue-500" /> Cargando información de PharmaPro...</div>}
+        {activeTab === 'Dashboard' && ['admin','owner'].includes(currentUser?.role?.toLowerCase()) && <DashboardView inventory={inventory} chartData={chartData} requests={requests} theme={theme} bgCard={bgCard} language={language} t={t} StatCard={StatCard} Icons={Icons} goToFilter={goToFilter} genericPut={genericPut} />}
 
-        {activeTab === 'Inventory' && (
-            <div className="space-y-4">
-                <div className="flex gap-2 overflow-x-auto pb-2 mb-2 no-scrollbar"><button onClick={resetFilters} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap border ${filterCategory === 'All' && !filterLowStock && filterExpiry === 'All' ? 'bg-white text-black' : 'bg-transparent text-gray-500 border-gray-600'}`}>Todo</button><button onClick={() => { setFilterLowStock(!filterLowStock); setFilterCategory('All'); setFilterExpiry('All'); }} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap border ${filterLowStock ? 'bg-orange-500 text-white border-orange-500' : 'bg-transparent text-gray-500 border-gray-600'}`}>⚠️ Stock Bajo</button>{Object.keys(categoryTranslations).map(cat => (<button key={cat} onClick={() => { setFilterCategory(cat); setFilterLowStock(false); setFilterExpiry('All'); }} className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap border ${filterCategory === cat ? 'bg-blue-600 text-white border-blue-600' : 'bg-transparent text-gray-500 border-gray-600'}`}>{categoryTranslations[cat][language]}</button>))}</div>
-                {!['admin','owner'].includes(currentUser?.role?.toLowerCase()) && requests.some(r => r.status === 'Sent') && (<div className={`p-4 rounded-2xl border mb-4 border-emerald-500/30 bg-emerald-500/5`}><h3 className="text-sm font-bold mb-3 flex items-center gap-2 text-emerald-500"><Icons.Truck className="w-5 h-5"/> Envíos por Recibir</h3><div className="space-y-2">{requests.filter(r => r.status === 'Sent').map(req => (<div key={req.id} className="flex justify-between items-center p-2 bg-black/20 rounded-lg"><div className="text-xs"><span>📦 <b>{req.sent_qty}</b> x {req.item_name}</span> <span className="opacity-50 text-[10px]">(Pediste: {req.qty})</span></div><button onClick={async () => { const res = await fetch(`${API_URL}/branch-requests/${req.id}/receive`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actingUser: currentUser }) }); if (res.ok) { showToast(`✅ Stock sumado (+${req.sent_qty})`); loadAllData(); } else { alert("Error al recibir"); } }} className="px-3 py-1 bg-emerald-600 text-white rounded text-[10px] font-bold">Recibir</button></div>))}</div></div>)}
-                <div className={`flex items-center px-4 rounded-2xl border ${inputClass}`}><Icons.Search className="w-5 h-5 opacity-50" /><input placeholder="Buscar..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full p-4 bg-transparent outline-none" /></div>
-                
-                <div className="space-y-2">
-                    {paginatedInventory.map(item => (
-                        <div key={item.id} className={`flex justify-between items-center p-4 rounded-2xl border ${bgCard}`}>
-                            <div className="flex items-center gap-3">
-                                {/* CLIC EN LA FOTO ABRE EL ZOOM */}
-                                <div onClick={() => item.image_url && setExpandedImage(item.image_url)} className="w-10 h-10 rounded-lg bg-gray-700 overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
-                                    {item.image_url ? (
-                                        <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" onError={(e:any) => e.target.style.display='none'} />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-xs opacity-30">IMG</div>
-                                    )}
-                                </div>
-                                <div><p className="font-bold">{item.name}</p><p className="text-xs text-blue-500">{item.category} • ${item.price}</p></div>
-                            </div>
-                            <div className="flex items-center gap-2"><span className={`font-bold mr-2 ${item.stock<=10?'text-red-500':''}`}>{item.stock}</span>{item.stock <= 10 && ['admin','owner','pharmacist'].includes(currentUser?.role?.toLowerCase()) && <button onClick={()=>requestStock(item)} className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded">Pedir</button>}{['admin','owner','pharmacist'].includes(currentUser?.role?.toLowerCase()) && <button onClick={() => setEditingItem(item)} className="p-2 bg-gray-500/10 rounded-lg"><Icons.Edit className="w-4 h-4"/></button>}</div>
-                        </div>
-                    ))}
-                </div>
-                
-                {filteredInventory.length > itemsPerPage && (
-                    <div className="flex justify-center gap-2 mt-4">
-                        <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-4 py-2 bg-gray-700 rounded-lg text-white disabled:opacity-50">Anterior</button>
-                        <span className="py-2 text-sm opacity-50">Página {currentPage}</span>
-                        <button onClick={() => setCurrentPage(p => (p * itemsPerPage < filteredInventory.length ? p + 1 : p))} disabled={currentPage * itemsPerPage >= filteredInventory.length} className="px-4 py-2 bg-gray-700 rounded-lg text-white disabled:opacity-50">Siguiente</button>
-                    </div>
-                )}
-
-                {['admin', 'owner'].includes(currentUser?.role?.toLowerCase()) && <button onClick={() => setIsAddingMed(true)} className="fixed bottom-24 right-6 w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-2xl"><Icons.Plus className="w-8 h-8"/></button>}
-            </div>
-        )}
+        {activeTab === 'Inventory' && <InventoryView inventory={inventory} filteredInventory={filteredInventory} paginatedInventory={paginatedInventory} categoryTranslations={categoryTranslations} language={language} searchQuery={searchQuery} setSearchQuery={setSearchQuery} resetFilters={resetFilters} filterCategory={filterCategory} filterLowStock={filterLowStock} filterExpiry={filterExpiry} setFilterCategory={setFilterCategory} setFilterLowStock={setFilterLowStock} setFilterExpiry={setFilterExpiry} currentPage={currentPage} itemsPerPage={itemsPerPage} setCurrentPage={setCurrentPage} currentUser={currentUser} setEditingItem={setEditingItem} setIsAddingMed={setIsAddingMed} requestStock={requestStock} Icons={Icons} bgCard={bgCard} inputClass={inputClass} />}
 
         {/* --- DEMÁS PESTAÑAS (POS, Orders, Clients, Settings...) --- */}
-        {activeTab === 'POS' && (
-          <div className="space-y-4 h-full flex flex-col">
-            <button onClick={() => setCashModal({ isOpen: true, type: activeShift ? 'close' : 'open' })} className={`w-full py-3 rounded-xl font-bold border flex items-center justify-center gap-2 ${activeShift ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'}`}><Icons.Cash className="w-5 h-5"/> {activeShift ? t('closeBox') : t('openBox')}</button>
-            <div className="flex gap-2 items-center"><div className={`flex-1 flex items-center px-4 rounded-2xl border transition-all ${scannerMode ? 'ring-2 ring-blue-500 bg-blue-500/10' : inputClass}`}><Icons.Search className="w-5 h-5 opacity-50" /><input ref={searchInputRef} placeholder={scannerMode ? "ESCANEA..." : "Buscar..."} value={posSearch} onChange={(e) => setPosSearch(e.target.value)} onKeyDown={handleScannerInput} className="w-full p-4 bg-transparent outline-none" autoFocus /></div><button onClick={() => setScannerMode(!scannerMode)} className={`p-4 rounded-2xl border ${scannerMode ? 'bg-blue-600 text-white' : ''}`}><Icons.Bolt className="w-6 h-6" /></button></div>
-            {posSearch && !scannerMode && <div className={`absolute z-50 p-2 rounded-2xl border max-h-60 overflow-y-auto shadow-2xl left-6 right-6 top-48 ${bgCard}`}>{inventory.filter(i => i.name.toLowerCase().includes(posSearch.toLowerCase())).map(i => (<div key={i.id} onClick={() => { addToCart(i); setPosSearch(''); }} className="p-3 hover:bg-neutral-800 rounded-xl flex justify-between"><span>{i.name}</span><span className="text-blue-500">${i.price}</span></div>))}</div>}
-            <div className="flex-1 overflow-y-auto space-y-2">{cart.map(i => (<div key={i.id} className={`p-3 rounded-2xl flex justify-between items-center border ${bgCard}`}><div><p className="font-bold text-sm">{i.name}</p><p className="text-xs opacity-60">${i.price} x {i.qty} = <b>${(i.price*i.qty).toFixed(2)}</b></p></div><div className="flex items-center gap-2 bg-gray-500/10 rounded-lg p-1"><button onClick={() => updateCartQty(i.id, -1)} className="p-1"><Icons.Minus className="w-4 h-4"/></button><span className="font-bold text-sm w-4 text-center">{i.qty}</span><button onClick={() => updateCartQty(i.id, 1)} className="p-1"><Icons.Plus className="w-4 h-4"/></button></div><button onClick={() => removeFromCart(i.id)} className="text-red-500 ml-2"><Icons.Trash className="w-4 h-4"/></button></div>))}</div>
-            <div className={`mt-auto pt-4 border-t ${theme === 'dark' ? 'border-neutral-800' : 'border-gray-200'}`}>
-                {selectedCustomer ? (<div className="flex items-center justify-between p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 mb-3"><div className="flex items-center gap-2"><Icons.Users className="w-5 h-5 text-blue-500" /><div><p className="font-bold text-sm text-blue-500">{selectedCustomer.name}</p><p className="text-[10px] opacity-60">{selectedCustomer.phone || 'Sin teléfono'}</p></div></div><button onClick={() => {setSelectedCustomer(null); setPosCustomerSearch('')}} className="p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg">✕</button></div>) : (<div className="relative mb-3 flex gap-2"><div className={`flex-1 flex items-center px-3 rounded-xl border ${inputClass}`}><Icons.Users className="w-5 h-5 opacity-30" /><input placeholder="Cliente (Opcional)" value={posCustomerSearch} onChange={(e) => setPosCustomerSearch(e.target.value)} className="w-full p-3 bg-transparent outline-none text-sm" /></div><button onClick={() => setIsAddingCustomer(true)} className="p-3 bg-blue-600 text-white rounded-xl"><Icons.Plus className="w-5 h-5" /></button>{posFilteredCustomers.length > 0 && (<div className={`absolute left-0 right-12 bottom-12 z-50 p-2 rounded-xl border shadow-xl max-h-40 overflow-y-auto ${theme === 'dark' ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-gray-200'}`}>{posFilteredCustomers.map(c => (<div key={c.id} onClick={() => { setSelectedCustomer(c); setPosCustomerSearch(''); }} className={`p-2 rounded-lg cursor-pointer hover:bg-blue-500/10 flex justify-between`}><span className="font-bold text-xs">{c.name}</span><span className="text-[10px] opacity-50">{c.phone}</span></div>))}</div>)}</div>)}
-                <div className="flex justify-between items-center mb-4"><span className="text-sm font-bold opacity-60">TOTAL</span><span className="text-3xl font-black text-blue-500">${cart.reduce((a,i)=>a+(i.price*i.qty),0).toFixed(2)}</span></div>
-                <button onClick={handleCheckout} disabled={cart.length === 0} className={`w-full py-4 rounded-2xl font-bold text-white shadow-xl active:scale-95 transition-transform ${cart.length === 0 ? 'bg-neutral-800 opacity-50' : 'bg-emerald-600'}`}>COBRAR</button>
-            </div>
-          </div>
-        )}
+        {activeTab === 'POS' && <POSView activeShift={activeShift} setCashModal={setCashModal} t={t} scannerMode={scannerMode} setScannerMode={setScannerMode} inputClass={inputClass} searchInputRef={searchInputRef} posSearch={posSearch} setPosSearch={setPosSearch} handleScannerInput={handleScannerInput} Icons={Icons} inventory={inventory} addToCart={addToCart} bgCard={bgCard} cart={cart} updateCartQty={updateCartQty} removeFromCart={removeFromCart} selectedCustomer={selectedCustomer} setSelectedCustomer={setSelectedCustomer} posCustomerSearch={posCustomerSearch} setPosCustomerSearch={setPosCustomerSearch} setIsAddingCustomer={setIsAddingCustomer} posFilteredCustomers={posFilteredCustomers} handleCheckout={handleCheckout} theme={theme} />}
 
-        {activeTab === 'Suppliers' && ( <div className="space-y-4"><button onClick={() => setIsAddingSupplier(true)} className="w-full py-4 bg-blue-600 rounded-2xl font-bold text-white">+ Nuevo Proveedor</button><div className="space-y-2">{suppliers.map(s => (<div key={s.id} className={`p-4 rounded-2xl border flex justify-between ${bgCard}`}><div><p className="font-bold">{s.name}</p><p className="text-xs opacity-50">{s.contact} • {s.phone}</p></div><button onClick={() => { setConfirmModal({ isOpen: true, type: 'delete_supplier', id: s.id, message: "¿Borrar Proveedor?" }); }} className="text-rose-500"><Icons.Trash className="w-5 h-5"/></button></div>))}</div></div> )}
-        {activeTab === 'Clients' && (<div className="space-y-4"><button onClick={() => setIsAddingCustomer(true)} className="w-full py-4 bg-blue-600 rounded-2xl font-bold text-white shadow-xl active:scale-95 transition-transform">+ {t('addClient')}</button><div className="space-y-2">{customers.map(c => (<div key={c.id} className={`p-4 rounded-2xl border flex justify-between items-center ${bgCard}`}><div><p className="font-bold text-sm">{c.name}</p></div><div className="flex gap-2"><button onClick={() => setEditingCustomer(c)} className="p-2"><Icons.Edit className="w-4 h-4"/></button>{['admin','owner'].includes(currentUser?.role?.toLowerCase()) && <button onClick={() => setConfirmModal({isOpen:true, type:'delete_customer', id:c.id, message:"¿Borrar?"})} className="text-rose-500"><Icons.Trash className="w-4 h-4"/></button>}</div></div>))}</div></div>)}
-        {activeTab === 'Orders' && (<div className="space-y-4">{orders.map(order => (<div key={order.id} className={`p-4 border rounded-2xl flex justify-between items-center ${bgCard}`}><div><p className="font-bold text-sm">{order.patient}</p><p className={`text-[10px] font-bold uppercase ${order.status==='Voided'?'text-red-500':'text-green-500'}`}>{order.status === 'Voided' ? 'ANULADO' : 'COMPLETADO'}</p></div><div className="flex items-center gap-3"><span className="font-bold mr-2">${Number(order.total).toFixed(2)}</span><button onClick={() => {setIsTicketOpen(true); setLastOrder(order);}} className="p-2 bg-blue-500/10 text-blue-500 rounded-lg"><Icons.Print className="w-4 h-4"/></button><button onClick={() => setSelectedOrder(order)} className="p-2 bg-gray-500/10 text-gray-500 rounded-lg"><Icons.Eye className="w-4 h-4"/></button></div></div>))}</div>)}
+        {activeTab === 'Suppliers' && <SuppliersView suppliers={suppliers} bgCard={bgCard} setIsAddingSupplier={setIsAddingSupplier} setConfirmModal={setConfirmModal} />}
+        {activeTab === 'Clients' && <CustomersView customers={customers} bgCard={bgCard} setIsAddingCustomer={setIsAddingCustomer} setEditingCustomer={setEditingCustomer} setConfirmModal={setConfirmModal} currentUser={currentUser} t={t} />}
+        {activeTab === 'Orders' && <OrdersView orders={orders} bgCard={bgCard} setIsTicketOpen={setIsTicketOpen} setLastOrder={setLastOrder} setSelectedOrder={setSelectedOrder} />}
         
-        {activeTab === 'Settings' && (
-            <div className="space-y-6">
-                {['admin', 'owner', 'dueño'].includes((currentUser?.role || '').toLowerCase()) && (
-                    <div className={`p-5 border rounded-3xl ${bgCard}`}>
-                        <h3 className="text-[10px] font-black opacity-30 uppercase tracking-[0.2em] mb-4">Admin</h3>
-                        <button onClick={exportToCSV} className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold flex items-center justify-center gap-3"><Icons.Download className="w-6 h-6" /> {t('exportCsv')}</button>
-                        <button onClick={() => setIsStaffMgmt(true)} className={`w-full p-4 mt-2 rounded-2xl font-bold text-left flex justify-between items-center text-sm border ${theme==='dark'?'bg-black/40 border-neutral-800/50':'bg-gray-50 border-gray-200'}`}>{t('staffMgmt')} <span className="text-blue-500">→</span></button>
-                        <button onClick={() => setIsBranchMgmt(true)} className={`w-full p-4 mt-2 rounded-2xl font-bold text-left flex justify-between items-center text-sm border ${theme==='dark'?'bg-black/40 border-neutral-800/50':'bg-gray-50 border-gray-200'}`}>Gestionar Sucursales <span className="text-blue-500">→</span></button>
-                    </div>
-                )}
-                <div className={`p-5 border rounded-3xl ${bgCard}`}><button onClick={() => setIsChangingPass(true)} className={`w-full p-4 rounded-2xl font-bold text-left flex justify-between items-center text-sm border ${theme==='dark'?'bg-black/40 border-neutral-800/50':'bg-gray-50 border-gray-200'}`}>{t('changePass')} <span className="text-blue-500">→</span></button></div>
-                <div className={`p-5 border rounded-3xl ${bgCard}`}>
-                    <h3 className="text-[10px] font-black opacity-30 uppercase tracking-[0.2em] mb-4">{t('language')}</h3>
-                    <div className={`flex p-1 rounded-2xl border mb-3 ${theme==='dark'?'bg-black border-neutral-800':'bg-gray-100 border-gray-200'}`}><button onClick={() => setLanguage('EN')} className={`flex-1 py-3 rounded-xl font-bold text-xs ${language === 'EN' ? 'bg-blue-600 text-white' : 'opacity-40'}`}>English</button><button onClick={() => setLanguage('ES')} className={`flex-1 py-3 rounded-xl font-bold text-xs ${language === 'ES' ? 'bg-blue-600 text-white' : 'opacity-40'}`}>Español</button></div>
-                    <div className={`flex p-1 rounded-2xl border ${theme==='dark'?'bg-black border-neutral-800':'bg-gray-100 border-gray-200'}`}><button onClick={() => setTheme('dark')} className={`flex-1 py-3 rounded-xl font-bold text-xs flex justify-center gap-2 ${theme === 'dark' ? 'bg-neutral-800 text-white' : 'opacity-40'}`}><Icons.Moon className="w-4 h-4"/> {t('darkMode')}</button><button onClick={() => setTheme('light')} className={`flex-1 py-3 rounded-xl font-bold text-xs flex justify-center gap-2 ${theme === 'light' ? 'bg-white text-black' : 'opacity-40'}`}><Icons.Sun className="w-4 h-4"/> {t('lightMode')}</button></div>
-                </div>
-                <div className={`p-5 border rounded-3xl ${bgCard}`}><button onClick={() => setConfirmModal({isOpen:true, type:'logout', message:t('logoutConfirm')})} className="w-full py-4 text-rose-500 font-bold border border-rose-500/20 rounded-2xl uppercase tracking-[0.15em] text-[10px] bg-rose-500/5 active:bg-rose-500/10">{t('logout')}</button></div>
-            </div>
-        )}
+        {activeTab === 'Settings' && <SettingsView theme={theme} language={language} setTheme={setTheme} setLanguage={setLanguage} t={t} exportToCSV={exportToCSV} setIsStaffMgmt={setIsStaffMgmt} setIsBranchMgmt={setIsBranchMgmt} setIsChangingPass={setIsChangingPass} setConfirmModal={setConfirmModal} />}
+
+        </div>
       </main>
 
       {/* --- MODAL DE ZOOM DE IMAGEN (NUEVO) --- */}
@@ -379,28 +349,28 @@ const App = () => {
                 <p className="text-xs opacity-50 mb-4">ID: #{selectedOrder.id}</p>
                 <div className="space-y-2 mb-4 max-h-40 overflow-y-auto">{selectedOrder.items.map((item: any, i: number) => (<div key={i} className="flex justify-between text-sm border-b border-dashed border-neutral-700/30 pb-1"><span>{item.qty} x {item.name}</span><span className="font-bold">${(item.price * item.qty).toFixed(2)}</span></div>))}</div>
                 <div className="flex justify-between items-center text-xl font-black mb-6"><span>Total</span><span>${Number(selectedOrder.total).toFixed(2)}</span></div>
-                <div className="flex gap-2"><button onClick={() => { setIsTicketOpen(true); setLastOrder(selectedOrder); }} className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm">Imprimir</button>{['admin','owner'].includes(currentUser?.role?.toLowerCase()) && selectedOrder.status !== 'Voided' && (<button onClick={() => setConfirmModal({isOpen:true, type:'void_order', id:selectedOrder.id, message:"¿ANULAR VENTA? Se devolverá el stock."})} className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold">Anular</button>)}</div>
+                <div className="flex gap-2"><button onClick={() => { setIsTicketOpen(true); setLastOrder(selectedOrder); }} className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm">{t('print')}</button>{['admin','owner'].includes(currentUser?.role?.toLowerCase()) && selectedOrder.status !== 'Voided' && (<button onClick={() => setConfirmModal({isOpen:true, type:'void_order', id:selectedOrder.id, message:"¿ANULAR VENTA? Se devolverá el stock."})} className="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold">Anular</button>)}</div>
             </div>
         </div>
       )}
 
-      {confirmModal.isOpen && (<div className="fixed inset-0 bg-black/95 z-[600] flex items-center justify-center p-8"><div className={`p-8 rounded-3xl border text-center w-full max-w-sm ${bgCard}`}><h3 className="text-2xl font-bold mb-8">{confirmModal.message}</h3><div className="flex gap-4"><button onClick={() => setConfirmModal({...confirmModal, isOpen:false})} className="flex-1 py-4 bg-gray-600 rounded-2xl text-white font-bold">{t('no')}</button><button onClick={() => { if(confirmModal.type==='void_order') handleVoidOrder(); else if(confirmModal.type==='delete_supplier') genericDelete(`/suppliers/${confirmModal.id}`, "Eliminado"); else executeDelete(); }} className="flex-1 py-4 bg-red-600 rounded-2xl text-white font-bold">{t('yes')}</button></div></div></div>)}
+      {confirmModal.isOpen && (<div className="fixed inset-0 bg-black/95 z-[600] flex items-center justify-center p-8"><div className={`p-8 rounded-3xl border text-center w-full max-w-sm ${bgCard}`}><h3 className="text-2xl font-bold mb-8">{confirmModal.message}</h3><div className="flex gap-3"><button onClick={() => setConfirmModal({...confirmModal, isOpen:false})} className="flex-1 min-w-0 py-4 bg-gray-600 rounded-2xl text-white font-bold">{t('no')}</button><button onClick={() => { if(confirmModal.type==='void_order') handleVoidOrder(); else if(confirmModal.type==='delete_supplier') genericDelete(`/suppliers/${confirmModal.id}`, "Eliminado"); else executeDelete(); }} className="flex-1 min-w-0 py-4 bg-red-600 rounded-2xl text-white font-bold">{t('yes')}</button></div></div></div>)}
 
       {(isBranchMgmt || isAddingBranch) && (
         <div className="fixed inset-0 bg-black/95 z-[250] flex items-center justify-center p-6">
             <div className={`w-full max-w-sm p-6 rounded-3xl border ${bgCard}`}>
                 <div className="flex items-center gap-3 mb-6">
                     <button onClick={() => { setIsBranchMgmt(false); setIsAddingBranch(false); }} className="p-2 rounded-full bg-gray-500/20"><Icons.Back className="w-5 h-5"/></button>
-                    <h2 className="text-xl font-bold">{isBranchMgmt ? "Sucursales" : "Nueva Sucursal"}</h2>
+                    <h2 className="text-xl font-bold">{isBranchMgmt ? t('branchList') : t('newBranch')}</h2>
                 </div>
                 {isBranchMgmt ? (
-                    <div><div className="space-y-2 mb-4 max-h-60 overflow-y-auto">{branches.map(b => (<div key={b.id} className="flex justify-between p-3 border rounded-xl items-center"><div><p className="font-bold text-sm">{b.name}</p><p className="text-[10px] opacity-50">{b.address}</p></div><button onClick={()=>setConfirmModal({isOpen:true, type:'delete_branch', id:b.id, message:"¿Borrar Sucursal?"})} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Icons.Trash className="w-4 h-4"/></button></div>))}</div><button type="button" onClick={()=>{setIsAddingBranch(true); setIsBranchMgmt(false);}} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">+ Nueva Sucursal</button></div>
+                    <div><div className="space-y-2 mb-4 max-h-60 overflow-y-auto">{branches.map(b => (<div key={b.id} className="flex justify-between p-3 border rounded-xl items-center"><div><p className="font-bold text-sm">{b.name}</p><p className="text-[10px] opacity-50">{b.address}</p></div><button onClick={()=>setConfirmModal({isOpen:true, type:'delete_branch', id:b.id, message:t('deleteBranch')})} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Icons.Trash className="w-4 h-4"/></button></div>))}</div><button type="button" onClick={()=>{setIsAddingBranch(true); setIsBranchMgmt(false);}} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">{`+ ${t('newBranch')}`}</button></div>
                 ) : (
                     <form onSubmit={addBranch} className="space-y-4">
-                        <input name="name" required placeholder="Nombre Sucursal" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
-                        <input name="address" placeholder="Dirección" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
-                        <input name="phone" placeholder="Teléfono" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
-                        <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">Guardar</button>
+                        <input name="name" required placeholder={t('branchName')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
+                        <input name="address" placeholder={t('address')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
+                        <input name="phone" placeholder={t('phone')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
+                        <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">{t('save')}</button>
                     </form>
                 )}
             </div>
@@ -412,15 +382,15 @@ const App = () => {
             <div className={`w-full max-w-sm p-6 rounded-3xl border ${bgCard}`}>
                 <div className="flex items-center gap-3 mb-6">
                     <button onClick={() => { setIsStaffMgmt(false); setIsAddingStaff(false); setEditingStaff(null); setIsChangingPass(false); }} className="p-2 rounded-full bg-gray-500/20"><Icons.Back className="w-5 h-5"/></button>
-                    <h2 className="text-xl font-bold">{isChangingPass ? "Cambiar Contraseña" : (isStaffMgmt ? "Gestión de Personal" : (isAddingStaff ? "Nuevo Empleado" : "Editar Empleado"))}</h2>
+                    <h2 className="text-xl font-bold">{isChangingPass ? t('changePass') : (isStaffMgmt ? t('staffMgmt') : (isAddingStaff ? t('newStaff') : t('editStaff')))}</h2>
                 </div>
                 {isStaffMgmt ? (
-                    <div><div className="space-y-2 mb-4 max-h-60 overflow-y-auto">{staffList.map(s => (<div key={s.id} className="flex justify-between p-3 border rounded-xl items-center"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-xs">{s.name.charAt(0)}</div><div><p className="font-bold text-sm">{s.name}</p><p className="text-[10px] opacity-50 uppercase">{s.role}</p></div></div><div className="flex gap-2"><button onClick={()=>{setEditingStaff(s); setIsStaffMgmt(false);}} className="p-2 bg-gray-500/10 rounded-lg"><Icons.Edit className="w-4 h-4"/></button>{s.username !== 'admin' && <button onClick={()=>setConfirmModal({isOpen:true, type:'delete_staff', id:s.id, message:"¿Eliminar Empleado?"})} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Icons.Trash className="w-4 h-4"/></button>}</div></div>))}</div><button type="button" onClick={()=>{setIsAddingStaff(true); setIsStaffMgmt(false);}} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">+ Añadir Empleado</button></div>
+                    <div><div className="space-y-2 mb-4 max-h-60 overflow-y-auto">{staffList.map(s => (<div key={s.id} className="flex justify-between p-3 border rounded-xl items-center"><div className="flex items-center gap-3"><div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-xs">{s.name.charAt(0)}</div><div><p className="font-bold text-sm">{s.name}</p><p className="text-[10px] opacity-50 uppercase">{t(({admin:'admin',owner:'admin',pharmacist:'pharmacist',cashier:'cashier',staff:'staffRole'} as any)[s.role?.toLowerCase()] || 'staffRole')}</p></div></div><div className="flex gap-2"><button onClick={()=>{setEditingStaff(s); setIsStaffMgmt(false);}} className="p-2 bg-gray-500/10 rounded-lg"><Icons.Edit className="w-4 h-4"/></button>{s.username !== 'admin' && <button onClick={()=>setConfirmModal({isOpen:true, type:'delete_staff', id:s.id, message:t('deleteStaff')})} className="p-2 bg-red-500/10 text-red-500 rounded-lg"><Icons.Trash className="w-4 h-4"/></button>}</div></div>))}</div><button type="button" onClick={()=>{setIsAddingStaff(true); setIsStaffMgmt(false);}} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">{`+ ${t('addStaff')}`}</button></div>
                 ) : (
                     <form onSubmit={isAddingStaff ? addStaffMember : handleUpdateStaff} className="space-y-4">
-                        {!isChangingPass && (<><input name="name" defaultValue={editingStaff?.name} required placeholder="Nombre Completo" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} /><select name="role" defaultValue={editingStaff?.role} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`}><option value="Pharmacist">Farmacéutico</option><option value="Cashier">Cajero</option><option value="Staff">Personal</option></select><input name="username" defaultValue={editingStaff?.username} required placeholder="Nombre de Usuario" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} /></>)}
-                        <input name="password" type="password" placeholder="Nueva Contraseña" className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
-                        <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">Guardar Cambios</button>
+                        {!isChangingPass && (<><input name="name" defaultValue={editingStaff?.name} required placeholder={t('fullName')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} /><select name="role" defaultValue={editingStaff?.role} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`}><option value="Pharmacist">{t('pharmacist')}</option><option value="Cashier">{t('cashier')}</option><option value="Staff">{t('staffRole')}</option></select><input name="username" defaultValue={editingStaff?.username} required placeholder={t('user')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} /></>)}
+                        <input name="password" type="password" placeholder={t('newPassword')} className={`w-full p-4 rounded-xl border outline-none ${inputClass}`} />
+                        <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold shadow-lg">{t('saveChanges')}</button>
                     </form>
                 )}
             </div>
@@ -428,7 +398,7 @@ const App = () => {
       )}
 
       {cashModal.isOpen && (<div className="fixed inset-0 bg-black/95 z-[500] flex items-center justify-center p-6"><form onSubmit={handleCashAction} className={`p-6 rounded-3xl border w-full max-w-xs ${bgCard}`}><h2 className="text-xl font-bold mb-2">{cashModal.type === 'open' ? '🟢 ABRIR TURNO' : '🔴 CERRAR TURNO'}</h2><input name="amount" type="number" step="0.01" autoFocus required className={`w-full p-4 text-2xl font-black text-center rounded-xl border mb-4 ${inputClass}`} /><button className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold">CONFIRMAR</button><button type="button" onClick={() => setCashModal({isOpen:false})} className="w-full mt-2 py-3 text-sm opacity-50">Cancelar</button></form></div>)}
-      {(isAddingSupplier || editingSupplier) && (<div className="fixed inset-0 bg-black/95 z-[250] flex items-center justify-center p-6"><form onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.target as HTMLFormElement); const body = { name: fd.get('name'), contact: fd.get('contact'), phone: fd.get('phone'), address: fd.get('address') }; if(editingSupplier) await genericPut(`/suppliers/${editingSupplier.id}`, body, "Actualizado"); else await genericPost('/suppliers', body, "Creado"); setIsAddingSupplier(false); setEditingSupplier(null); }} className={`w-full max-w-sm space-y-4 p-6 rounded-3xl border ${bgCard}`}><h2 className="text-xl font-bold">Proveedor</h2><input name="name" defaultValue={editingSupplier?.name} required placeholder="Empresa" className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="contact" defaultValue={editingSupplier?.contact} placeholder="Contacto" className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="phone" defaultValue={editingSupplier?.phone} placeholder="Teléfono" className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="address" defaultValue={editingSupplier?.address} placeholder="Dirección" className={`w-full p-4 rounded-xl border ${inputClass}`} /><div className="flex gap-2"><button type="button" onClick={()=>{setIsAddingSupplier(false);setEditingSupplier(null)}} className="flex-1 py-3 bg-gray-600 rounded-xl text-white">Cancelar</button><button className="flex-1 py-3 bg-blue-600 rounded-xl text-white font-bold">Guardar</button></div></form></div>)}
+      {(isAddingSupplier || editingSupplier) && (<div className="fixed inset-0 bg-black/95 z-[250] flex items-center justify-center p-6"><form onSubmit={async (e) => { e.preventDefault(); const fd = new FormData(e.target as HTMLFormElement); const body = { name: fd.get('name'), contact: fd.get('contact'), phone: fd.get('phone'), address: fd.get('address') }; if(editingSupplier) await genericPut(`/suppliers/${editingSupplier.id}`, body, "Actualizado"); else await genericPost('/suppliers', body, "Creado"); setIsAddingSupplier(false); setEditingSupplier(null); }} className={`w-full max-w-sm space-y-4 p-6 rounded-3xl border ${bgCard}`}><h2 className="text-xl font-bold">{editingSupplier ? 'Editar proveedor' : 'Nuevo proveedor'}</h2><label className="block text-xs font-bold opacity-60">Empresa<input name="name" defaultValue={editingSupplier?.name} required placeholder="Nombre de la empresa" className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">Contacto<input name="contact" defaultValue={editingSupplier?.contact} placeholder="Nombre de contacto" className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">Teléfono<input name="phone" defaultValue={editingSupplier?.phone} placeholder="Número de teléfono" className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">Dirección<input name="address" defaultValue={editingSupplier?.address} placeholder="Dirección" className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><div className="flex gap-2"><button type="button" onClick={()=>{setIsAddingSupplier(false);setEditingSupplier(null)}} className="flex-1 py-3 bg-gray-600 rounded-xl text-white">Cancelar</button><button className="flex-1 py-3 bg-blue-600 rounded-xl text-white font-bold">Guardar</button></div></form></div>)}
       {(isAddingMed || editingItem) && (<div className="fixed inset-0 bg-black/95 backdrop-blur-md z-[250] flex items-center justify-center p-6"><form onSubmit={editingItem ? updateMedication : addMedication} className={`w-full max-w-sm space-y-4 p-6 rounded-3xl border shadow-2xl ${bgCard}`}><h2 className="text-xl font-bold">{editingItem ? "Editar" : "Nuevo"} Producto</h2>
       
       {/* VISTA PREVIA DE IMAGEN */}
@@ -439,7 +409,7 @@ const App = () => {
       <input name="image_url" defaultValue={editingItem?.image_url} placeholder="URL de Imagen (Opcional)" className={`w-full p-4 rounded-xl border ${inputClass}`} />
       
       <div className="flex gap-4 pt-2"><button type="button" onClick={() => {setIsAddingMed(false); setEditingItem(null)}} className="flex-1 py-4 font-bold opacity-40 text-sm">Cancelar</button><button type="submit" className="flex-1 py-4 bg-blue-600 text-white rounded-xl font-bold text-sm">Guardar</button></div></form></div>)}
-      {(isAddingCustomer || editingCustomer) && (<div className="fixed inset-0 bg-black/95 z-[250] flex items-center justify-center p-6"><form onSubmit={editingCustomer ? updateCustomer : addCustomer} className={`w-full max-w-sm space-y-4 p-6 rounded-3xl border ${bgCard}`}><input name="name" defaultValue={editingCustomer?.name} required placeholder={t('name')} className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="phone" defaultValue={editingCustomer?.phone} placeholder="Tel" className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="address" defaultValue={editingCustomer?.address} placeholder="Direc" className={`w-full p-4 rounded-xl border ${inputClass}`} /><input name="rnc" defaultValue={editingCustomer?.rnc} placeholder="RNC" className={`w-full p-4 rounded-xl border ${inputClass}`} /><div className="flex gap-2"><button type="button" onClick={()=>{setIsAddingCustomer(false);setEditingCustomer(null)}} className="flex-1 py-3 bg-gray-600 text-white rounded-xl">Cancelar</button><button className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold">Guardar</button></div></form></div>)}
+      {(isAddingCustomer || editingCustomer) && (<div className="fixed inset-0 bg-black/95 z-[250] flex items-center justify-center p-6"><form onSubmit={editingCustomer ? updateCustomer : addCustomer} className={`w-full max-w-sm space-y-4 p-6 rounded-3xl border ${bgCard}`}><h2 className="text-xl font-bold">{editingCustomer ? t('editClient') : t('newClient')}</h2><label className="block text-xs font-bold opacity-60">{t('fullName')}<input name="name" defaultValue={editingCustomer?.name} required placeholder={t('customerName')} className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">{t('phone')}<input name="phone" defaultValue={editingCustomer?.phone} placeholder={t('phoneNumber')} className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">{t('address')}<input name="address" defaultValue={editingCustomer?.address} placeholder={t('address')} className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><label className="block text-xs font-bold opacity-60">{t('receiptTaxId')}<input name="rnc" defaultValue={editingCustomer?.rnc} placeholder={t('optionalTaxId')} className={`mt-1 w-full p-4 rounded-xl border ${inputClass}`} /></label><div className="flex gap-2"><button type="button" onClick={()=>{setIsAddingCustomer(false);setEditingCustomer(null)}} className="flex-1 py-3 bg-gray-600 text-white rounded-xl">{t('cancel')}</button><button className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold">{t('save')}</button></div></form></div>)}
       
       {isTicketOpen && lastOrder && (
         <div className="fixed inset-0 bg-black/90 z-[500] flex items-center justify-center p-4">
@@ -448,27 +418,27 @@ const App = () => {
             <div id="print-area" className="font-mono p-4 text-[12px] leading-tight w-full mx-auto bg-white text-black">
               <div className="text-center mb-4 border-b-2 border-dashed border-black pb-2">
                   <h2 className="text-2xl font-black uppercase">PHARMAPRO</h2>
-                  <p>Sucursal Centro</p>
-                  <p>RNC: 101-555-999</p>
-                  <p>{new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</p>
+                  <p>{t('centralBranch')}</p>
+                  <p>{t('receiptTaxId')}: 101-555-999</p>
+                  <p>{new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-SV')}</p>
               </div>
               <div className="mb-2 border-b-2 border-dashed border-black pb-2">
-                  <p><b>Cliente:</b> {lastOrder.patient}</p>
-                  <p><b>Ticket #:</b> {lastOrder.id}</p>
-                  <p><b>Cajero:</b> {currentUser?.name}</p>
-                  <p><b>DTE/Reg:</b> _________________</p>
+                  <p><b>{t('receiptCustomer')}:</b> {['Cliente General', 'General Customer'].includes(lastOrder.patient) ? t('generalCustomer') : lastOrder.patient}</p>
+                  <p><b>{t('receiptTicket')}:</b> {lastOrder.id}</p>
+                  <p><b>{t('receiptCashier')}:</b> {currentUser?.name}</p>
+                  <p><b>{t('receiptRegistration')}:</b> _________________</p>
               </div>
               <table className="w-full mb-4 border-b-2 border-dashed border-black pb-2">
-                  <thead><tr className="text-left"><th>Cant</th><th>Item</th><th className="text-right">$$</th></tr></thead>
+                  <thead><tr className="text-left"><th>{t('receiptQty')}</th><th>{t('receiptItem')}</th><th className="text-right">$$</th></tr></thead>
                   <tbody>{lastOrder.items.map((item: any, i: number) => (<tr key={i}><td className="align-top pt-1">{item.qty}</td><td className="align-top pt-1">{item.name.substring(0, 15)}</td><td className="text-right align-top pt-1">{(item.price * item.qty).toFixed(2)}</td></tr>))}</tbody>
               </table>
               <div className="flex justify-between text-2xl font-black mb-2"><span>TOTAL</span><span>${Number(lastOrder.total).toFixed(2)}</span></div>
               <div className="text-center mt-6 border-t-2 border-dashed border-black pt-2">
-                  <p>*** GRACIAS POR SU COMPRA ***</p>
-                  <p className="mt-2 text-[10px]">Sistema PharmaPro v10.1</p>
+                  <p>*** {t('receiptThanks').toUpperCase()} ***</p>
+                  <p className="mt-2 text-[10px]">{t('receiptSystem')}</p>
               </div>
             </div>
-            <button onClick={()=>window.print()} className="w-full py-4 bg-black text-white font-bold no-print">IMPRIMIR</button>
+            <button onClick={()=>window.print()} className="w-full py-4 bg-black text-white font-bold no-print">{t('print')}</button>
           </div>
         </div>
       )}

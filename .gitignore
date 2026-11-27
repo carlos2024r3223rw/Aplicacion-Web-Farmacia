@@ -12,6 +12,17 @@ dist
 dist-ssr
 *.local
 
+# Environment files & credentials
+.env
+.env.*
+*.env
+bd.env
+backend/.env
+backend/bd.env
+
+# Scripts de arranque local
+iniciar.bat
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

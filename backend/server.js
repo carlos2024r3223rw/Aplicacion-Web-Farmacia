@@ -1,4 +1,6 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, 'bd.env') });
 const express = require('express');
 const mysql = require('mysql2/promise'); 
 const cors = require('cors');
@@ -252,4 +254,11 @@ app.get('/stats/weekly', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Servidor Async LISTO en puerto ${PORT}`));
+const HOST = process.env.HOST || '127.0.0.1';
+
+const startServer = (port = PORT, host = HOST) =>
+    app.listen(port, host, () => console.log(`Servidor Async LISTO en http://${host}:${port}`));
+
+if (require.main === module) startServer();
+
+module.exports = { app, db, startServer };
