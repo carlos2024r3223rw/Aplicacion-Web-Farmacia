@@ -22,7 +22,7 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 
 | Dashboard | Point of sale |
 | :---: | :---: |
-| <img width="1875" height="951" alt="Captura de pantalla 2026-11-24 164543" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" />
+| <img width="1875" height="951" alt="Captura de pantalla 2026-11-24 164543" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" /> |
  | <img width="1892" height="956" alt="image" src="https://github.com/user-attachments/assets/3b7c245f-a81f-40bd-8d0c-b0de243e1d39" />
  |
 
