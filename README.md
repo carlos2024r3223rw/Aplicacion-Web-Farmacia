@@ -35,6 +35,10 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 | :---: |
 | <img width="1847" height="721" alt="inventory" src="https://github.com/user-attachments/assets/d122f12d-6ae2-4d61-ab33-b099ea78dfb5" />
  |
+ | Creation Customers |
+| :---: |
+| <img width="546" height="707" alt="image" src="https://github.com/user-attachments/assets/4ab85955-23e2-472d-99fc-ecd4a67539d5" />
+ |
 
 ## Built with
 
