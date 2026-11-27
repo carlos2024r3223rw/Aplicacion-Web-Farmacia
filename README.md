@@ -23,11 +23,13 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 | Dashboard | Point of sale |
 | :---: | :---: |
 | <img width="1875" height="951" alt="Captura de pantalla 2026-11-24 164543" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" />
- | <img width="340" alt="POS cart" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" /> |
+ | <img width="1892" height="956" alt="image" src="https://github.com/user-attachments/assets/3b7c245f-a81f-40bd-8d0c-b0de243e1d39" />
+ |
 
 | Receipt | Staff roles |
 | :---: | :---: |
-| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="340" alt="Staff roles" src="https://github.com/user-attachments/assets/6b3a95d8-4fb1-4ea1-850a-c24f27b3317a" /> |
+| <img width="340" alt="Thermal receipt" src="https://github.com/user-attachments/assets/e7239d5e-dfef-4efc-a333-ebf99b6ce25a" /> | <img width="1861" height="892" alt="image" src="https://github.com/user-attachments/assets/ba225d65-3602-473c-bf6f-5a89231fe785" />
+ |
 
 | Inventory |
 | :---: |
