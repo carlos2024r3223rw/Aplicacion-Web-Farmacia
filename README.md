@@ -22,7 +22,8 @@ It demonstrates how a pharmacy team could move from product search to a recorded
 
 | Dashboard | Point of sale |
 | :---: | :---: |
-| <img width="1866" height="938" alt="Captura de pantalla 2026-11-24 164124" src="https://github.com/user-attachments/assets/7f784f0d-d466-45e1-b52c-e21576b5c568" /> | <img width="340" alt="POS cart" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" /> |
+| <img width="1875" height="951" alt="Captura de pantalla 2026-11-24 164543" src="https://github.com/user-attachments/assets/c9998f26-f62c-4aad-9cce-158a464f44ef" />
+ | <img width="340" alt="POS cart" src="https://github.com/user-attachments/assets/4be62538-e378-432c-96e9-f2efe61fc371" /> |
 
 | Receipt | Staff roles |
 | :---: | :---: |
